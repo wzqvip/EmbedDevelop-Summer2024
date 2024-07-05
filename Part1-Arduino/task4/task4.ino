@@ -13,12 +13,20 @@
 3. 输入以上命令后，可以通过串口监视器查看当前参数值
 */
 
+/*
+
+d的数量级是10
+
+
+*/
+
+
 #define PLOTTER 1
 
 #define LED 12
 #define STBY 7
-#define N 8
-#define P 9
+#define N 9
+#define P 8
 #define PWM 10
 #define SetPoint A1
 #define Sensor A0
@@ -32,7 +40,7 @@ float e_sum = 0;         // 误差积分
 float e_last = 0;        // 上一个误差值
 unsigned long last_time; // 上一次更新时间
 
-const int MIN_PWM = 68;           // 定义电机转动的最小PWM值
+const int MIN_PWM = 40;           // 定义电机转动的最小PWM值
 const int POSITION_THRESHOLD = 2; // 位置变化阈值
 const int CONTROL_THRESHOLD = 2;  // 控制信号阈值
 
@@ -48,7 +56,18 @@ float pid(float pos_error)
   last_time = now;
 
   e_sum += pos_error * dt;
-  float e_diff = (pos_error - e_last) / dt;
+
+  // modified code
+  float diff = (pos_error - e_last);
+  // Serial.print(",");
+  // Serial.print(diff);
+  // Serial.print(",");
+  if (abs(diff)<10){
+    diff = 0;
+  }
+  float e_diff = diff / dt;
+
+
   float output = kp * pos_error + ki * e_sum + kd * e_diff;
   e_last = pos_error;
   return output;
@@ -92,7 +111,7 @@ void loop()
     Serial.print(",");
     Serial.print(kd);
     Serial.print("\n");
-    
+
   } else {
   Serial.print("Set Point: ");
   Serial.print(set_point);
