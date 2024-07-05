@@ -103,13 +103,16 @@ void loop()
   control_signal = constrain(control_signal, -255, 255);
 
   // 确保控制信号的绝对值不低于最小PWM值
-  if (control_signal > 0)
+  if (control_signal > 40)
   {
     control_signal = max(control_signal, MIN_PWM);
   }
-  else if (control_signal < 0)
+  else if (control_signal < -40)
   {
     control_signal = min(control_signal, -MIN_PWM);
+  }
+  else {
+    // control_signal = 0;
   }
 
   {
