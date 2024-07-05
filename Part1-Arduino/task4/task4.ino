@@ -32,22 +32,23 @@ unsigned long last_time; // 上一次更新时间
 
 const int MIN_PWM = 60;           // 定义电机转动的最小PWM值
 const int POSITION_THRESHOLD = 5; // 位置变化阈值
+const int CONTROL_THRESHOLD = 3;  // 控制信号阈值
 
 int set_point = 0;
 int prev_set_point = 0;
 int prev_pos = 0;
 
 // PID控制函数
-float pid(float error)
+float pid(float pos_error)
 {
   unsigned long now = millis();
   float dt = (now - last_time) / 1000.0;
   last_time = now;
 
-  e_sum += error * dt;
-  float e_diff = (error - e_last) / dt;
-  float output = kp * error + ki * e_sum + kd * e_diff;
-  e_last = error;
+  e_sum += pos_error * dt;
+  float e_diff = (pos_error - e_last) / dt;
+  float output = kp * pos_error + ki * e_sum + kd * e_diff;
+  e_last = pos_error;
   return output;
 }
 
@@ -93,11 +94,9 @@ void loop()
 
   Serial.print("\n");
 
-  prev_set_point = set_point;
-  prev_pos = curr_pos;
-
-  float error = set_point - curr_pos; // 计算误差
-  float control_signal = pid(error);  // 计算PID控制信号
+  float pos_error = set_point - curr_pos;           // 计算误差
+  float control_error = set_point - prev_set_point; // 计算控制信号误差
+  float control_signal = pid(pos_error);            // 计算PID控制信号
 
   // 将控制信号限制在-255到255之间
   control_signal = constrain(control_signal, -255, 255);
@@ -111,12 +110,17 @@ void loop()
   {
     control_signal = min(control_signal, -MIN_PWM);
   }
-  else {
+  else
+  {
     // control_signal = 0;
   }
 
+  if (abs(pos_error) < POSITION_THRESHOLD && abs(control_error) < CONTROL_THRESHOLD)
   {
-
+    digitalWrite(STBY, 0); // 关闭电机驱动
+  }
+  else
+  {
     digitalWrite(STBY, 1); // 启用电机驱动
 
     if (control_signal > 0)
@@ -142,10 +146,12 @@ void loop()
       digitalWrite(LED, 0);
     }
 
+    prev_set_point = set_point;
+    prev_pos = curr_pos;
+
     delay(delay_time); // 短暂延时以避免过度频繁的控制信号更新
   }
 }
-
 
 void parseInput(String input)
 {
