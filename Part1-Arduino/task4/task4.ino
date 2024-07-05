@@ -6,14 +6,14 @@
 #define SetPoint A1
 #define Sensor A0
 
-float kp = 4; // P系数
-float ki = 0.3; // I系数
-float kd = 1; // D系数
+float kp = 3; // P系数
+float ki = 0.5; // I系数
+float kd = 0; // D系数
 float e_sum = 0; // 误差积分
 float e_last = 0; // 上一个误差值
 unsigned long last_time; // 上一次更新时间
 
-const int MIN_PWM = 40; // 定义电机转动的最小PWM值
+const int MIN_PWM = 20; // 定义电机转动的最小PWM值
 
 // PID控制函数
 float pid(float error) {
@@ -43,6 +43,11 @@ void setup() {
 }
 
 void loop() {
+  if (Serial.available() > 0) {
+    String input = Serial.readStringUntil('\n');
+    parseInput(input);
+  }
+  
   int set_point = analogRead(SetPoint); // 读取设定值
   int curr_pos = analogRead(Sensor); // 读取当前传感器值
   
@@ -59,9 +64,9 @@ void loop() {
   control_signal = constrain(control_signal, -255, 255);
 
   // 确保控制信号的绝对值不低于最小PWM值
-  if (control_signal > 5) {
+  if (control_signal > 0) {
     control_signal = max(control_signal, MIN_PWM);
-  } else if (control_signal < -5) {
+  } else if (control_signal < 0) {
     control_signal = min(control_signal, -MIN_PWM);
   }
   
@@ -87,5 +92,25 @@ void loop() {
     digitalWrite(LED, 0);
   }
 
-  delay(50); // 短暂延时以避免过度频繁的控制信号更新
+  delay(20); // 缩短延时时间，提高更新频率
+}
+
+void parseInput(String input) {
+  input.trim(); // 去除字符串首尾的空白字符
+  
+  if (input.startsWith("p=")) {
+    kp = input.substring(2).toFloat();
+    Serial.print("Updated kp to ");
+    Serial.println(kp);
+  } else if (input.startsWith("i=")) {
+    ki = input.substring(2).toFloat();
+    Serial.print("Updated ki to ");
+    Serial.println(ki);
+  } else if (input.startsWith("d=")) {
+    kd = input.substring(2).toFloat();
+    Serial.print("Updated kd to ");
+    Serial.println(kd);
+  } else {
+    Serial.println("Invalid input");
+  }
 }
