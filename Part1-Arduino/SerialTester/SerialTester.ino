@@ -15,15 +15,13 @@
 
 #define LED 12
 #define STBY 7
-#define N 8
-#define P 9
+#define N 9
+#define P 8
 #define PWM 10
 #define SetPoint A1
 #define Sensor A0
 
-#define delay_time 20
-
-float kp = 3;            // P系数
+float kp = 1.5;          // P系数
 float ki = 0.5;          // I系数
 float kd = 0.1;          // D系数
 float e_sum = 0;         // 误差积分
@@ -75,8 +73,8 @@ void loop()
     parseInput(input);
   }
 
+  set_point = analogRead(SetPoint); // 读取当前传感器值
   int curr_pos = analogRead(Sensor); // 读取当前传感器值
-  set_point = analogRead(SetPoint);
 
   Serial.print("Set Point: ");
   Serial.print(set_point);
@@ -93,56 +91,8 @@ void loop()
 
   Serial.print("\n");
 
-  prev_set_point = set_point;
-  prev_pos = curr_pos;
-
-  float error = set_point - curr_pos; // 计算误差
-  float control_signal = pid(error);  // 计算PID控制信号
-
-  // 将控制信号限制在-255到255之间
-  control_signal = constrain(control_signal, -255, 255);
-
-  // 确保控制信号的绝对值不低于最小PWM值
-  if (control_signal > 0)
-  {
-    control_signal = max(control_signal, MIN_PWM);
-  }
-  else if (control_signal < 0)
-  {
-    control_signal = min(control_signal, -MIN_PWM);
-  }
-
-  {
-
-    digitalWrite(STBY, 1); // 启用电机驱动
-
-    if (control_signal > 0)
-    {
-      digitalWrite(N, 0);
-      digitalWrite(P, 1);
-      analogWrite(PWM, control_signal);
-    }
-    else
-    {
-      digitalWrite(N, 1);
-      digitalWrite(P, 0);
-      analogWrite(PWM, -control_signal);
-    }
-
-    // 判断是否达到设定值
-    if (abs(set_point - curr_pos) < 10)
-    {
-      digitalWrite(LED, 1); // 如果达到设定值，点亮LED
-    }
-    else
-    {
-      digitalWrite(LED, 0);
-    }
-
-    delay(delay_time); // 短暂延时以避免过度频繁的控制信号更新
-  }
+  delay(20); // 短暂延时以避免过度频繁的控制信号更新
 }
-
 
 void parseInput(String input)
 {
