@@ -13,23 +13,69 @@ void A3setup(){
     pinMode(CURRENTVAL, INPUT);
 
     digitalWrite(STBY,HIGH);
-    digitalWrite(PWM,HIGH);
+    // digitalWrite(PWM,HIGH);
+    // analogWrite(PWM,255);
 }
 
 void A3loop(){
-    // digitalWrite(IN1,LOW);
-    // digitalWrite(IN2,HIGH);
-    // delay(50);
-    // digitalWrite(IN1,HIGH);
-    // digitalWrite(IN2,LOW);
-    // delay(50);
-    analogWrite(IN1,voltToInt(5));
-    analogWrite(IN2,voltToInt(0));
-    delay(200);
     
-    analogWrite(IN1,voltToInt(0));
-    analogWrite(IN2,voltToInt(5));
-    delay(200);
+    for (int i = PWM_MAX; i > 0; i-=50)
+    {
+        int ticker = 0;
+        analogWrite(PWM,i);
+        int currentVal = analogRead(CURRENTVAL);
+        int lastVal = currentVal;
+        Serial.println(i);
+        while (analogRead(CURRENTVAL) > 10)
+        {
+
+            digitalWrite(IN1,HIGH);
+            digitalWrite(IN2,LOW);
+            delay(20);
+            lastVal = currentVal;
+            currentVal = analogRead(CURRENTVAL);
+            if (currentVal == lastVal)
+            {
+                ticker++;
+            }
+            else{
+                ticker = 0;
+            }
+            if (ticker > 100)
+            {
+                Serial.print("PWM stopped at: ");
+                Serial.println(i);
+                ticker = 0;
+                return;
+            }
+        }
+        
+        currentVal = analogRead(CURRENTVAL);
+        lastVal = currentVal;
+        while (analogRead(CURRENTVAL) < 1000)
+        {
+            digitalWrite(IN1,LOW);
+            digitalWrite(IN2,HIGH);
+            delay(20);
+            lastVal = currentVal;
+            currentVal = analogRead(CURRENTVAL);
+            if (currentVal == lastVal)
+            {
+                ticker++;
+            }
+            else{
+                ticker = 0;
+            }
+            if (ticker > 100)
+            {
+                Serial.print("PWM stopped at: ");
+                Serial.println(i);
+                ticker = 0;
+                return;
+            }
+        }
+
+    }
 }
 
 

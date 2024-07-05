@@ -4,3 +4,5 @@
 
 void generalSetup();
 float readTargetVolt();
+void rotate(int speed);
+int updatePWM(int currentPWM, float targetVolt, float currentVolt);

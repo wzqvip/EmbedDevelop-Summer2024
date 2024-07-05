@@ -9,3 +9,9 @@ pin definitions
 #define IN2 9
 #define SETVAL A0
 #define CURRENTVAL A1
+
+#define PWM_MAX 255
+#define POSITIVE 1
+#define NEGATIVE 0
+
+// #define 
