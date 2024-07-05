@@ -6,12 +6,14 @@
 #define SetPoint A1
 #define Sensor A0
 
-float kp = 1.0; // P系数
-float ki = 0.1; // I系数
-float kd = 0.01; // D系数
+float kp = 4; // P系数
+float ki = 0.3; // I系数
+float kd = 1; // D系数
 float e_sum = 0; // 误差积分
 float e_last = 0; // 上一个误差值
 unsigned long last_time; // 上一次更新时间
+
+const int MIN_PWM = 40; // 定义电机转动的最小PWM值
 
 // PID控制函数
 float pid(float error) {
@@ -55,6 +57,13 @@ void loop() {
   
   // 将控制信号限制在-255到255之间
   control_signal = constrain(control_signal, -255, 255);
+
+  // 确保控制信号的绝对值不低于最小PWM值
+  if (control_signal > 5) {
+    control_signal = max(control_signal, MIN_PWM);
+  } else if (control_signal < -5) {
+    control_signal = min(control_signal, -MIN_PWM);
+  }
   
   Serial.print("Control Signal: ");
   Serial.println(control_signal);
