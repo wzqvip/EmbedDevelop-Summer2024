@@ -3,9 +3,9 @@
 #include "A3.h"
 #include "A4.h"
 void setup() {
-  A4setup();
+  A3setup();
 }
 
 void loop() {
-  A4loop();
+  A3loop();
 }

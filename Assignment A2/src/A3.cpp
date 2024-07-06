@@ -19,13 +19,14 @@ void A3setup(){
 
 void A3loop(){
     
-    for (int i = PWM_MAX; i > 0; i-=50)
+    for (int i = PWM_MAX; i > 45; i-=10)
     {
         int ticker = 0;
         analogWrite(PWM,i);
         int currentVal = analogRead(CURRENTVAL);
         int lastVal = currentVal;
         Serial.println(i);
+        unsigned long start_time = millis();
         while (analogRead(CURRENTVAL) > 10)
         {
 
@@ -52,7 +53,7 @@ void A3loop(){
         
         currentVal = analogRead(CURRENTVAL);
         lastVal = currentVal;
-        while (analogRead(CURRENTVAL) < 1000)
+        while (analogRead(CURRENTVAL) < 1010)
         {
             digitalWrite(IN1,LOW);
             digitalWrite(IN2,HIGH);
@@ -74,6 +75,12 @@ void A3loop(){
                 return;
             }
         }
+        unsigned long end_time = millis();
+        Serial.print("PWM: ");
+        Serial.print(i);
+        Serial.print(";Speed: ");
+        Serial.print(1000.0*1000.0/(end_time-start_time));
+        Serial.println(" degree/s");
 
     }
 }
