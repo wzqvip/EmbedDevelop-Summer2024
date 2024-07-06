@@ -1,5 +1,4 @@
 /*
-
 ====串口未初始化前程序不会运行！====
 
 串口调参方法：
@@ -10,16 +9,13 @@
    - i=0.5: 设置I系数为0.5
    - d=0.1: 设置D系数为0.1
    - s=100: 设置设定值为100
+   - dt=10: 设置距离阈值为10
 3. 输入以上命令后，可以通过串口监视器查看当前参数值
 */
 
 /*
-
 d的数量级是10
-
-
 */
-
 
 #define PLOTTER 1
 
@@ -47,6 +43,7 @@ const int CONTROL_THRESHOLD = 2;  // 控制信号阈值
 int set_point = 0;
 int prev_set_point = 0;
 int prev_pos = 0;
+int distance_threshold = 10;      // 距离阈值
 
 // PID控制函数
 float pid(float pos_error)
@@ -57,16 +54,11 @@ float pid(float pos_error)
 
   e_sum += pos_error * dt;
 
-  // modified code
   float diff = (pos_error - e_last);
-  // Serial.print(",");
-  // Serial.print(diff);
-  // Serial.print(",");
-  if (abs(diff)<10){
+  if (abs(diff) < 10) {
     diff = 0;
   }
   float e_diff = diff / dt;
-
 
   float output = kp * pos_error + ki * e_sum + kd * e_diff;
   e_last = pos_error;
@@ -76,8 +68,7 @@ float pid(float pos_error)
 void setup()
 {
   Serial.begin(115200);
-  while (!Serial)
-    ;
+  while (!Serial);
   pinMode(LED, OUTPUT);
   pinMode(STBY, OUTPUT);
   pinMode(N, OUTPUT);
@@ -110,36 +101,41 @@ void loop()
     Serial.print(ki);
     Serial.print(",");
     Serial.print(kd);
+    Serial.print(",");
+    Serial.print(distance_threshold);
     Serial.print("\n");
-
   } else {
-  Serial.print("Set Point: ");
-  Serial.print(set_point);
+    Serial.print("Set Point: ");
+    Serial.print(set_point);
 
-  Serial.print(" Current Position: ");
-  Serial.print(curr_pos);
+    Serial.print(" Current Position: ");
+    Serial.print(curr_pos);
 
-  Serial.print(" P: ");
-  Serial.print(kp);
-  Serial.print(" I: ");
-  Serial.print(ki);
-  Serial.print(" D: ");
-  Serial.print(kd);
+    Serial.print(" P: ");
+    Serial.print(kp);
+    Serial.print(" I: ");
+    Serial.print(ki);
+    Serial.print(" D: ");
+    Serial.print(kd);
 
-  Serial.print("\n");
+    Serial.print(" Distance Threshold: ");
+    Serial.print(distance_threshold);
+
+    Serial.print("\n");
   }
 
   float pos_error = set_point - curr_pos;           // 计算误差
   float control_error = set_point - prev_set_point; // 计算控制信号误差
-  float control_signal = pid(pos_error);            // 计算PID控制信号
 
-  // +35*符号
-  control_signal = control_signal + 35 * (control_signal > 0 ? 1 : -1);
+  float control_signal;
 
-  // 将控制信号限制在-255到255之间
-  control_signal = constrain(control_signal, -255, 255);
+  if (abs(pos_error) > distance_threshold) {
+    control_signal = 255 * (pos_error > 0 ? 1 : -1); // 超出距离阈值，最大功率运动
+  } else {
+    control_signal = pid(pos_error); // 采用PID控制
+  }
 
-  
+  control_signal = constrain(control_signal, -255, 255); // 将控制信号限制在-255到255之间
 
   // 确保控制信号的绝对值不低于最小PWM值
   if (control_signal > 40)
@@ -149,10 +145,6 @@ void loop()
   else if (control_signal < -40)
   {
     control_signal = min(control_signal, -MIN_PWM);
-  }
-  else
-  {
-    // control_signal = 0;
   }
 
   if (abs(pos_error) < POSITION_THRESHOLD && abs(control_error) < CONTROL_THRESHOLD)
@@ -220,6 +212,12 @@ void parseInput(String input)
     set_point = input.substring(2).toInt();
     Serial.print("Updated set point to ");
     Serial.println(set_point);
+  }
+  else if (input.startsWith("dt="))
+  {
+    distance_threshold = input.substring(3).toInt();
+    Serial.print("Updated distance threshold to ");
+    Serial.println(distance_threshold);
   }
   else
   {
