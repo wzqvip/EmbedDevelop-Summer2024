@@ -100,7 +100,7 @@ class PIDControllerApp:
             try:
                 setpoint = float(value)
                 if 0 <= setpoint <= 100:
-                    scaled_value = int(setpoint * 10.23)
+                    scaled_value = int(setpoint)
                     self.serial_port.write(f"s={scaled_value}\n".encode())
                 else:
                     print("Setpoint out of range (0-100)")

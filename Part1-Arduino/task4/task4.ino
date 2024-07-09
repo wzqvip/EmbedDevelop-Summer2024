@@ -2,6 +2,8 @@
 
 ====串口未初始化前程序不会运行！====
 
+PLOTTER设置为1的话用绘图器可视化调节，设置为0用串口监视器人眼看
+
 串口调参方法：
 
 1. 打开串口监视器, 波特率默认115200
@@ -80,8 +82,12 @@ void loop()
 
   int curr_pos = analogRead(Sensor); // 读取当前传感器值
   set_point = analogRead(SetPoint);
+  
+  int power = analogRead(A2);
 
   if (PLOTTER) {
+    Serial.print(power);
+    Serial.print(",");
     Serial.print(set_point);
     Serial.print(",");
     Serial.print(curr_pos);
