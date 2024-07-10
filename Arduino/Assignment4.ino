@@ -114,6 +114,17 @@ void loop()
   float control_error = set_point - prev_set_point; // 计算控制信号误差
   float control_signal = pid(pos_error);            // 计算PID控制信号
 
+  if (pos_error < 10.0) {
+    kp = 2.5;
+    ki = 5;
+    kd = 0;
+  }
+  else {
+    kp = 3;
+    ki = 7;
+    kd = 0.2;
+  }
+
   // 将控制信号限制在-255到255之间
   control_signal = constrain(control_signal, -255, 255);
 
