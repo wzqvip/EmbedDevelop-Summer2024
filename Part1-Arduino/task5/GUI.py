@@ -164,13 +164,9 @@ class PIDControllerApp:
                         self.kp_display_value.config(text=kp)
                         self.ki_display_value.config(text=ki)
                         self.kd_display_value.config(text=kd)
-                    elif line.startswith("LED: YELLOW"):
-                        self.led_status.config(text="YELLOW", bg="yellow")
-                    elif line.startswith("LED: RED"):
-                        self.led_status.config(text="RED", bg="red")
             except serial.SerialException:
                 print("Serial read error")
-            time.sleep(0.1)
+            time.sleep(0.01)
 
     def on_closing(self):
         self.running = False
