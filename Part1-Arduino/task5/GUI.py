@@ -4,6 +4,7 @@ import serial
 import threading
 import time
 import serial.tools.list_ports
+import math
 
 class PIDControllerApp:
     def __init__(self, root):
@@ -14,12 +15,13 @@ class PIDControllerApp:
         self.running = False
 
         self.create_widgets()
+        self.refresh_ports()
 
     def create_widgets(self):
         self.port_label = tk.Label(self.root, text="Select Port:")
         self.port_label.grid(row=0, column=0)
 
-        self.port_combobox = ttk.Combobox(self.root, values=self.get_serial_ports())
+        self.port_combobox = ttk.Combobox(self.root)
         self.port_combobox.grid(row=0, column=1)
 
         self.connect_button = tk.Button(self.root, text="Connect", command=self.connect_serial)
@@ -86,16 +88,23 @@ class PIDControllerApp:
         self.led_status = tk.Label(self.root, text="OFF", bg="grey")
         self.led_status.grid(row=10, column=1)
 
+        self.canvas = tk.Canvas(self.root, width=200, height=200, bg="white")
+        self.canvas.grid(row=0, column=4, rowspan=11)
+        self.arc = self.canvas.create_arc(50, 50, 150, 150, start=90, extent=0, outline="blue", width=2)
+        self.set_point_arc = self.canvas.create_arc(50, 50, 150, 150, start=90, extent=0, outline="red", width=2)
+
+    def refresh_ports(self):
+        ports = self.get_serial_ports()
+        self.port_combobox['values'] = ports
+        self.root.after(1000, self.refresh_ports)  # 每隔1秒刷新一次端口列表
+
     def get_serial_ports(self):
         ports = serial.tools.list_ports.comports()
         return [port.device for port in ports]
 
     def connect_serial(self):
         if self.serial_port and self.serial_port.is_open:
-            self.serial_port.close()
-            self.connect_button.config(text="Connect")
-            self.connection_status.config(text="Not Connected", bg="grey")
-            self.running = False
+            self.disconnect_serial()
         else:
             selected_port = self.port_combobox.get()
             if selected_port:
@@ -110,24 +119,31 @@ class PIDControllerApp:
             else:
                 self.connection_status.config(text="No Port Selected", bg="red")
 
+    def disconnect_serial(self):
+        if self.serial_port:
+            self.serial_port.close()
+        self.connect_button.config(text="Connect")
+        self.connection_status.config(text="Not Connected", bg="grey")
+        self.running = False
+
     def update_kp(self):
         if self.serial_port and self.serial_port.is_open:
             value = self.kp_scale.get()
-            command = f"p={value} \n"
+            command = f"p={value}\n"
             print(f"Sending command: {command}")
             self.serial_port.write(command.encode())
 
     def update_ki(self):
         if self.serial_port and self.serial_port.is_open:
             value = self.ki_scale.get()
-            command = f"i={value} \n"
+            command = f"i={value}\n"
             print(f"Sending command: {command}")
             self.serial_port.write(command.encode())
 
     def update_kd(self):
         if self.serial_port and self.serial_port.is_open:
             value = self.kd_scale.get()
-            command = f"d={value} \n"
+            command = f"d={value}\n"
             print(f"Sending command: {command}")
             self.serial_port.write(command.encode())
 
@@ -138,7 +154,7 @@ class PIDControllerApp:
                 setpoint = float(value)
                 if 0 <= setpoint <= 100:
                     scaled_value = int(setpoint)
-                    command = f"s={scaled_value} \n"
+                    command = f"s={scaled_value}\n"
                     print(f"Sending command: {command}")
                     self.serial_port.write(command.encode())
                 else:
@@ -157,16 +173,31 @@ class PIDControllerApp:
                 line = self.serial_port.readline().decode('utf-8').strip()
                 if line:
                     data = line.split(",")
-                    if len(data) == 5:
-                        set_point, curr_pos, kp, ki, kd = data
+                    if len(data) == 6:
+                        set_point, curr_pos, kp, ki, kd, ready = data
                         self.setpoint_display_value.config(text=f"{set_point}%")
                         self.current_position_value.config(text=f"{curr_pos}%")
                         self.kp_display_value.config(text=kp)
                         self.ki_display_value.config(text=ki)
                         self.kd_display_value.config(text=kd)
-            except serial.SerialException:
+                        if ready == "1":
+                            self.led_status.config(text="ON", bg="green")
+                        else:
+                            self.led_status.config(text="ON", bg="yellow")
+                        self.update_arc(set_point, curr_pos)
+            except serial.SerialException: 
                 print("Serial read error")
+                self.disconnect_serial()
             time.sleep(0.01)
+
+    def update_arc(self, set_point, curr_pos):
+        # 更新红色圆弧
+        set_point_extent = (float(set_point) / 100) * 360
+        self.canvas.itemconfig(self.set_point_arc, extent=set_point_extent)
+
+        # 更新蓝色圆弧
+        current_pos_extent = (float(curr_pos) / 100) * 360
+        self.canvas.itemconfig(self.arc, extent=current_pos_extent)
 
     def on_closing(self):
         self.running = False

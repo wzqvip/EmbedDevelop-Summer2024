@@ -48,7 +48,6 @@ float pid(float pos_error)
   unsigned long now = millis();
   float dt = (now - last_time) / 1000.0;
   last_time = now;
-
   e_sum += pos_error * dt;
   float e_diff = (pos_error - e_last) / dt;
   float output = kp * pos_error + ki * e_sum + kd * e_diff;
@@ -82,36 +81,53 @@ void loop()
 
   int curr_pos = analogRead(Sensor); // 读取当前传感器值
   set_point = analogRead(SetPoint);
-  
-  int power = analogRead(A2);
 
-  if (PLOTTER) {
-    Serial.print(set_point);
+  int power = analogRead(A2);
+  int ready = 0;
+
+  // 判断是否达到设定值
+  if (abs(set_point - curr_pos) < 10)
+  {
+    ready = 1;
+    digitalWrite(LED, 1); // 如果达到设定值，点亮LED
+  }
+  else
+  {
+    ready = 0;
+    digitalWrite(LED, 0);
+  }
+
+  if (PLOTTER)
+  {
+    Serial.print(float(set_point) / 10.24);
     Serial.print(",");
-    Serial.print(curr_pos);
+    Serial.print(float(curr_pos) / 10.24);
     Serial.print(",");
     Serial.print(kp);
     Serial.print(",");
     Serial.print(ki);
     Serial.print(",");
     Serial.print(kd);
+    Serial.print(",");
+    Serial.print(ready);
     Serial.print("\n");
-    
-  } else {
-  Serial.print("Set Point: ");
-  Serial.print(set_point);
+  }
+  else
+  {
+    Serial.print("Set Point: ");
+    Serial.print(set_point / 1023);
 
-  Serial.print(" Current Position: ");
-  Serial.print(curr_pos);
+    Serial.print(" Current Position: ");
+    Serial.print(curr_pos / 1023);
 
-  Serial.print(" P: ");
-  Serial.print(kp);
-  Serial.print(" I: ");
-  Serial.print(ki);
-  Serial.print(" D: ");
-  Serial.print(kd);
+    Serial.print(" P: ");
+    Serial.print(kp);
+    Serial.print(" I: ");
+    Serial.print(ki);
+    Serial.print(" D: ");
+    Serial.print(kd);
 
-  Serial.print("\n");
+    Serial.print("\n");
   }
 
   float pos_error = set_point - curr_pos;           // 计算误差
@@ -154,16 +170,6 @@ void loop()
       digitalWrite(N, 1);
       digitalWrite(P, 0);
       analogWrite(PWM, -control_signal);
-    }
-
-    // 判断是否达到设定值
-    if (abs(set_point - curr_pos) < 10)
-    {
-      digitalWrite(LED, 1); // 如果达到设定值，点亮LED
-    }
-    else
-    {
-      digitalWrite(LED, 0);
     }
 
     prev_set_point = set_point;
