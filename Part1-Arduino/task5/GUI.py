@@ -25,6 +25,9 @@ class PIDControllerApp:
         self.connect_button = tk.Button(self.root, text="Connect", command=self.connect_serial)
         self.connect_button.grid(row=0, column=2)
 
+        self.connection_status = tk.Label(self.root, text="Not Connected", bg="grey")
+        self.connection_status.grid(row=0, column=3)
+
         self.kp_label = tk.Label(self.root, text="Kp")
         self.kp_label.grid(row=1, column=0)
         self.kp_scale = tk.Scale(self.root, from_=0, to=10, resolution=0.1, orient=tk.HORIZONTAL)
@@ -63,36 +66,70 @@ class PIDControllerApp:
         self.setpoint_display_value = tk.Label(self.root, text="0%")
         self.setpoint_display_value.grid(row=6, column=1)
 
+        self.kp_display_label = tk.Label(self.root, text="Kp Display:")
+        self.kp_display_label.grid(row=7, column=0)
+        self.kp_display_value = tk.Label(self.root, text="0")
+        self.kp_display_value.grid(row=7, column=1)
+
+        self.ki_display_label = tk.Label(self.root, text="Ki Display:")
+        self.ki_display_label.grid(row=8, column=0)
+        self.ki_display_value = tk.Label(self.root, text="0")
+        self.ki_display_value.grid(row=8, column=1)
+
+        self.kd_display_label = tk.Label(self.root, text="Kd Display:")
+        self.kd_display_label.grid(row=9, column=0)
+        self.kd_display_value = tk.Label(self.root, text="0")
+        self.kd_display_value.grid(row=9, column=1)
+
         self.led_label = tk.Label(self.root, text="LED Status:")
-        self.led_label.grid(row=7, column=0)
+        self.led_label.grid(row=10, column=0)
         self.led_status = tk.Label(self.root, text="OFF", bg="grey")
-        self.led_status.grid(row=7, column=1)
+        self.led_status.grid(row=10, column=1)
 
     def get_serial_ports(self):
         ports = serial.tools.list_ports.comports()
         return [port.device for port in ports]
 
     def connect_serial(self):
-        selected_port = self.port_combobox.get()
-        if selected_port:
-            self.serial_port = serial.Serial(selected_port, 115200, timeout=1)
-            self.running = True
-            self.start_serial_thread()
+        if self.serial_port and self.serial_port.is_open:
+            self.serial_port.close()
+            self.connect_button.config(text="Connect")
+            self.connection_status.config(text="Not Connected", bg="grey")
+            self.running = False
+        else:
+            selected_port = self.port_combobox.get()
+            if selected_port:
+                try:
+                    self.serial_port = serial.Serial(selected_port, 115200, timeout=1)
+                    self.connect_button.config(text="Disconnect")
+                    self.connection_status.config(text="Connected", bg="green")
+                    self.running = True
+                    self.start_serial_thread()
+                except serial.SerialException:
+                    self.connection_status.config(text="Connection Failed", bg="red")
+            else:
+                self.connection_status.config(text="No Port Selected", bg="red")
 
     def update_kp(self):
         if self.serial_port and self.serial_port.is_open:
             value = self.kp_scale.get()
-            self.serial_port.write(f"p={value}\n".encode())
+            command = f"p={value} \n"
+            print(f"Sending command: {command}")
+            self.serial_port.write(command.encode())
 
     def update_ki(self):
         if self.serial_port and self.serial_port.is_open:
             value = self.ki_scale.get()
-            self.serial_port.write(f"i={value}\n".encode())
+            command = f"i={value} \n"
+            print(f"Sending command: {command}")
+            self.serial_port.write(command.encode())
 
     def update_kd(self):
         if self.serial_port and self.serial_port.is_open:
             value = self.kd_scale.get()
-            self.serial_port.write(f"d={value}\n".encode())
+            command = f"d={value} \n"
+            print(f"Sending command: {command}")
+            self.serial_port.write(command.encode())
 
     def update_setpoint(self):
         if self.serial_port and self.serial_port.is_open:
@@ -101,7 +138,9 @@ class PIDControllerApp:
                 setpoint = float(value)
                 if 0 <= setpoint <= 100:
                     scaled_value = int(setpoint)
-                    self.serial_port.write(f"s={scaled_value}\n".encode())
+                    command = f"s={scaled_value} \n"
+                    print(f"Sending command: {command}")
+                    self.serial_port.write(command.encode())
                 else:
                     print("Setpoint out of range (0-100)")
             except ValueError:
@@ -114,17 +153,23 @@ class PIDControllerApp:
 
     def serial_thread(self):
         while self.running:
-            line = self.serial_port.readline().decode('utf-8').strip()
-            if line.startswith("Current Position:"):
-                current_position = line.split(":")[1].strip()
-                self.current_position_value.config(text=f"{current_position}%")
-            elif line.startswith("Set Point:"):
-                set_point = line.split(":")[1].strip()
-                self.setpoint_display_value.config(text=f"{set_point}%")
-            elif line.startswith("LED: YELLOW"):
-                self.led_status.config(text="YELLOW", bg="yellow")
-            elif line.startswith("LED: RED"):
-                self.led_status.config(text="RED", bg="red")
+            try:
+                line = self.serial_port.readline().decode('utf-8').strip()
+                if line:
+                    data = line.split(",")
+                    if len(data) == 5:
+                        set_point, curr_pos, kp, ki, kd = data
+                        self.setpoint_display_value.config(text=f"{set_point}%")
+                        self.current_position_value.config(text=f"{curr_pos}%")
+                        self.kp_display_value.config(text=kp)
+                        self.ki_display_value.config(text=ki)
+                        self.kd_display_value.config(text=kd)
+                    elif line.startswith("LED: YELLOW"):
+                        self.led_status.config(text="YELLOW", bg="yellow")
+                    elif line.startswith("LED: RED"):
+                        self.led_status.config(text="RED", bg="red")
+            except serial.SerialException:
+                print("Serial read error")
             time.sleep(0.1)
 
     def on_closing(self):

@@ -86,8 +86,6 @@ void loop()
   int power = analogRead(A2);
 
   if (PLOTTER) {
-    Serial.print(power);
-    Serial.print(",");
     Serial.print(set_point);
     Serial.print(",");
     Serial.print(curr_pos);
