@@ -16,11 +16,17 @@ PLOTTER设置为1的话用绘图器可视化调节，设置为0用串口监视�
 */
 
 #define PLOTTER 1
+#define REVERSE 1 // !!!!如果你动一下电机就会一直转到头，那就是你的电机正负极和我的相反，修改这里
 
 #define LED 12
 #define STBY 7
+#if REVERSE
 #define N 8
 #define P 9
+#else
+#define N 9
+#define P 8
+#endif
 #define PWM 10
 #define SetPoint A1
 #define Sensor A0
