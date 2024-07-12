@@ -20,6 +20,7 @@ PLOTTER设置为1的话用绘图器可视化调节，设置为0用串口监视�
 
 #define LED 12
 #define STBY 7
+
 #if REVERSE
 #define N 8
 #define P 9
@@ -27,6 +28,7 @@ PLOTTER设置为1的话用绘图器可视化调节，设置为0用串口监视�
 #define N 9
 #define P 8
 #endif
+
 #define PWM 10
 #define SetPoint A1
 #define Sensor A0
