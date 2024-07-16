@@ -43,12 +43,13 @@ float e_last = 0;        // 上一个误差值
 unsigned long last_time; // 上一次更新时间
 
 const int MIN_PWM = 68;           // 定义电机转动的最小PWM值
-const int POSITION_THRESHOLD = 2; // 位置变化阈值
-const int CONTROL_THRESHOLD = 2;  // 控制信号阈值
+const int POSITION_THRESHOLD = 5; // 位置变化阈值
+const int CONTROL_THRESHOLD = 5;  // 控制信号阈值
 
 int set_point = 0;
 int prev_set_point = 0;
 int prev_pos = 0;
+bool serial_control = false;      // 串口控制标志
 
 // PID控制函数
 float pid(float pos_error)
@@ -88,13 +89,17 @@ void loop()
   }
 
   int curr_pos = analogRead(Sensor); // 读取当前传感器值
-  set_point = analogRead(SetPoint);
 
-  int power = analogRead(A2);
+  if (!serial_control)
+  {
+    // 如果是旋钮控制，更新设定值
+    set_point = analogRead(SetPoint);
+  }
+
   int ready = 0;
 
   // 判断是否达到设定值
-  if (abs(set_point - curr_pos) < 10)
+  if (abs(set_point - curr_pos) < 20)
   {
     ready = 1;
     digitalWrite(LED, 1); // 如果达到设定值，点亮LED
@@ -123,10 +128,10 @@ void loop()
   else
   {
     Serial.print("Set Point: ");
-    Serial.print(set_point / 1023);
+    Serial.print(set_point / 10.24);
 
     Serial.print(" Current Position: ");
-    Serial.print(curr_pos / 1023);
+    Serial.print(curr_pos / 10.24);
 
     Serial.print(" P: ");
     Serial.print(kp);
@@ -134,6 +139,9 @@ void loop()
     Serial.print(ki);
     Serial.print(" D: ");
     Serial.print(kd);
+
+    Serial.print(" Ready: ");
+    Serial.print(ready);
 
     Serial.print("\n");
   }
@@ -211,9 +219,23 @@ void parseInput(String input)
   }
   else if (input.startsWith("s="))
   {
-    set_point = input.substring(2).toInt();
-    Serial.print("Updated set point to ");
-    Serial.println(set_point);
+    int sp = input.substring(2).toInt();
+    if (sp == -1)
+    {
+      serial_control = false; // 切换为旋钮控制
+      Serial.println("Switched to analog control");
+    }
+    else if (sp >= 0 && sp <= 100)
+    {
+      set_point = sp * 10.24; // 将0-100的值映射到0-1023的范围
+      serial_control = true; // 设置串口控制标志
+      Serial.print("Updated set point to ");
+      Serial.println(set_point);
+    }
+    else
+    {
+      Serial.println("Invalid set point value");
+    }
   }
   else
   {
