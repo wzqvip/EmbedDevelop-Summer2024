@@ -1,17 +1,16 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, scrolledtext
 import serial
 import threading
 import time
 import serial.tools.list_ports
-import math
 
 class PIDControllerApp:
     def __init__(self, root):
         self.root = root
         self.root.title("PID Controller")
 
-        self.serial_port = None
+        self.serial_port_manager = SerialPortManager()
         self.running = False
 
         self.create_widgets()
@@ -93,6 +92,10 @@ class PIDControllerApp:
         self.arc = self.canvas.create_arc(50, 50, 150, 150, start=90, extent=0, outline="blue", width=2)
         self.set_point_arc = self.canvas.create_arc(50, 50, 150, 150, start=90, extent=0, outline="red", width=2)
 
+        # Add scrolled text box for serial output
+        self.text_box = scrolledtext.ScrolledText(self.root, width=50, height=10, state='disabled')
+        self.text_box.grid(row=11, column=0, columnspan=5, padx=10, pady=10)
+
     def refresh_ports(self):
         ports = self.get_serial_ports()
         self.port_combobox['values'] = ports
@@ -103,52 +106,53 @@ class PIDControllerApp:
         return [port.device for port in ports]
 
     def connect_serial(self):
-        if self.serial_port and self.serial_port.is_open:
+        if self.serial_port_manager.is_running:
             self.disconnect_serial()
         else:
             selected_port = self.port_combobox.get()
             if selected_port:
                 try:
-                    self.serial_port = serial.Serial(selected_port, 115200, timeout=1)
+                    self.serial_port_manager.set_name(selected_port)
+                    self.serial_port_manager.set_baud(115200)
+                    self.serial_port_manager.start()
                     self.connect_button.config(text="Disconnect")
                     self.connection_status.config(text="Connected", bg="green")
                     self.running = True
-                    self.start_serial_thread()
+                    self.recursive_update_textbox()
                 except serial.SerialException:
                     self.connection_status.config(text="Connection Failed", bg="red")
             else:
                 self.connection_status.config(text="No Port Selected", bg="red")
 
     def disconnect_serial(self):
-        if self.serial_port:
-            self.serial_port.close()
+        self.serial_port_manager.stop()
         self.connect_button.config(text="Connect")
         self.connection_status.config(text="Not Connected", bg="grey")
         self.running = False
 
     def update_kp(self):
-        if self.serial_port and self.serial_port.is_open:
+        if self.serial_port_manager.is_running:
             value = self.kp_scale.get()
             command = f"p={value}\n"
             print(f"Sending command: {command}")
-            self.serial_port.write(command.encode())
+            self.serial_port_manager.write(command.encode())
 
     def update_ki(self):
-        if self.serial_port and self.serial_port.is_open:
+        if self.serial_port_manager.is_running:
             value = self.ki_scale.get()
             command = f"i={value}\n"
             print(f"Sending command: {command}")
-            self.serial_port.write(command.encode())
+            self.serial_port_manager.write(command.encode())
 
     def update_kd(self):
-        if self.serial_port and self.serial_port.is_open:
+        if self.serial_port_manager.is_running:
             value = self.kd_scale.get()
             command = f"d={value}\n"
             print(f"Sending command: {command}")
-            self.serial_port.write(command.encode())
+            self.serial_port_manager.write(command.encode())
 
     def update_setpoint(self):
-        if self.serial_port and self.serial_port.is_open:
+        if self.serial_port_manager.is_running:
             value = self.setpoint_entry.get()
             try:
                 setpoint = float(value)
@@ -156,7 +160,7 @@ class PIDControllerApp:
                     scaled_value = int(setpoint)
                     command = f"s={scaled_value}\n"
                     print(f"Sending command: {command}")
-                    self.serial_port.write(command.encode())
+                    self.serial_port_manager.write(command.encode())
                 else:
                     print("Setpoint out of range (0-100)")
             except ValueError:
@@ -170,7 +174,7 @@ class PIDControllerApp:
     def serial_thread(self):
         while self.running:
             try:
-                line = self.serial_port.readline().decode('utf-8').strip()
+                line = self.serial_port_manager.read_line().decode('utf-8').strip()
                 if line:
                     data = line.split(",")
                     if len(data) == 6:
@@ -185,7 +189,7 @@ class PIDControllerApp:
                         else:
                             self.led_status.config(text="ON", bg="yellow")
                         self.update_arc(set_point, curr_pos)
-            except serial.SerialException: 
+            except serial.SerialException:
                 print("Serial read error")
                 self.disconnect_serial()
             time.sleep(0.01)
@@ -199,11 +203,85 @@ class PIDControllerApp:
         current_pos_extent = (float(curr_pos) / 100) * 360
         self.canvas.itemconfig(self.arc, extent=current_pos_extent)
 
+    def recursive_update_textbox(self):
+        serial_port_buffer = self.serial_port_manager.read_buffer()
+        self.text_box.config(state='normal')
+        self.text_box.insert(tk.END, serial_port_buffer.decode("ascii"))
+        self.text_box.see(tk.END)
+        self.text_box.config(state='disabled')
+        if self.serial_port_manager.is_running:
+            self.root.after(100, self.recursive_update_textbox)
+
     def on_closing(self):
         self.running = False
-        if self.serial_port:
-            self.serial_port.close()
+        if self.serial_port_manager.is_running:
+            self.serial_port_manager.stop()
         self.root.destroy()
+
+
+class SerialPortManager:
+    def __init__(self, serial_port_baud=9600):
+        self.is_running = False
+        self.serial_port_name = None
+        self.serial_port_baud = serial_port_baud
+        self.serial_port = serial.Serial()
+        self.serial_port_buffer = bytearray()
+
+    def set_name(self, serial_port_name):
+        self.serial_port_name = serial_port_name
+
+    def set_baud(self, serial_port_baud):
+        self.serial_port_baud = serial_port_baud
+
+    def start(self):
+        self.is_running = True
+        self.serial_port_thread = threading.Thread(target=self.thread_handler)
+        self.serial_port_thread.start()
+
+    def stop(self):
+        self.is_running = False
+
+    def thread_handler(self):
+        while self.is_running:
+            if not self.serial_port.isOpen():
+                self.serial_port = serial.Serial(
+                    port=self.serial_port_name,
+                    baudrate=self.serial_port_baud,
+                    bytesize=8,
+                    timeout=2,
+                    stopbits=serial.STOPBITS_ONE,
+                )
+            else:
+                while self.serial_port.in_waiting > 0:
+                    serial_port_byte = self.serial_port.read(1)
+                    self.serial_port_buffer.append(int.from_bytes(serial_port_byte, byteorder='big'))
+                    self.main_process(serial_port_byte)
+
+        if self.serial_port.isOpen():
+            self.serial_port.close()
+
+    def read_buffer(self):
+        buffer = self.serial_port_buffer
+        self.serial_port_buffer = bytearray()
+        return buffer
+
+    def write(self, data):
+        if self.serial_port.isOpen():
+            self.serial_port.write(data)
+
+    def read_line(self):
+        if self.serial_port.isOpen():
+            return self.serial_port.readline()
+        return b''
+
+    def main_process(self, input_byte):
+        try:
+            character = input_byte.decode("ascii")
+        except UnicodeDecodeError:
+            pass
+        else:
+            print(character, end="")
+
 
 if __name__ == "__main__":
     root = tk.Tk()
