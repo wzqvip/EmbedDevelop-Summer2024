@@ -84,7 +84,7 @@ class PIDControllerApp:
 
         self.led_label = tk.Label(self.root, text="LED Status:")
         self.led_label.grid(row=10, column=0)
-        self.led_status = tk.Label(self.root, text="OFF", bg="grey")
+        self.led_status = tk.Label(self.root, text="TUNING", bg="grey")
         self.led_status.grid(row=10, column=1)
 
         self.canvas = tk.Canvas(self.root, width=200, height=200, bg="white")
@@ -180,9 +180,9 @@ class PIDControllerApp:
                 self.ki_display_value.config(text=ki)
                 self.kd_display_value.config(text=kd)
                 if ready == "1":
-                    self.led_status.config(text="ON", bg="green")
+                    self.led_status.config(text="READY", bg="green")
                 else:
-                    self.led_status.config(text="OFF", bg="yellow")
+                    self.led_status.config(text="TUNING", bg="yellow")
                 self.update_arc(set_point, curr_pos)
 
     def update_arc(self, set_point, curr_pos):
@@ -237,25 +237,29 @@ class SerialPortManager:
 
     def thread_handler(self):
         while self.is_running:
-            if not self.serial_port.isOpen():
-                self.serial_port = serial.Serial(
-                    port=self.serial_port_name,
-                    baudrate=self.serial_port_baud,
-                    bytesize=8,
-                    timeout=2,
-                    stopbits=serial.STOPBITS_ONE,
-                )
-            else:
-                while self.serial_port.in_waiting > 0:
-                    serial_port_byte = self.serial_port.read(1)
-                    self.serial_port_buffer.append(int.from_bytes(serial_port_byte, byteorder='big'))
-                    self.line_buffer += serial_port_byte.decode('utf-8')
+            try:
+                if not self.serial_port.isOpen():
+                    self.serial_port = serial.Serial(
+                        port=self.serial_port_name,
+                        baudrate=self.serial_port_baud,
+                        bytesize=8,
+                        timeout=2,
+                        stopbits=serial.STOPBITS_ONE,
+                    )
+                else:
+                    while self.serial_port.in_waiting > 0:
+                        serial_port_byte = self.serial_port.read(1)
+                        self.serial_port_buffer.append(int.from_bytes(serial_port_byte, byteorder='big'))
+                        self.line_buffer += serial_port_byte.decode('utf-8')
 
-                    if '\n' in self.line_buffer:
-                        lines = self.line_buffer.split('\n')
-                        for line in lines[:-1]:
-                            self.update_app(line.strip())
-                        self.line_buffer = lines[-1]
+                        if '\n' in self.line_buffer:
+                            lines = self.line_buffer.split('\n')
+                            for line in lines[:-1]:
+                                self.update_app(line.strip())
+                            self.line_buffer = lines[-1]
+            except serial.SerialException as e:
+                print(f"Serial error: {e}")
+                self.app.disconnect_serial()
 
         if self.serial_port.isOpen():
             self.serial_port.close()
@@ -272,9 +276,9 @@ class SerialPortManager:
                 self.app.ki_display_value.config(text=ki)
                 self.app.kd_display_value.config(text=kd)
                 if ready == "1":
-                    self.app.led_status.config(text="ON", bg="green")
+                    self.app.led_status.config(text="READY", bg="green")
                 else:
-                    self.app.led_status.config(text="OFF", bg="yellow")
+                    self.app.led_status.config(text="TUNING", bg="yellow")
                 self.app.update_arc(set_point, curr_pos)
 
     def read_buffer(self):
