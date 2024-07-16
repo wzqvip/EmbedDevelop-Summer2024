@@ -10,7 +10,7 @@ class PIDControllerApp:
         self.root = root
         self.root.title("PID Controller")
 
-        self.serial_port_manager = SerialPortManager()
+        self.serial_port_manager = SerialPortManager(self)
         self.running = False
 
         self.create_widgets()
@@ -119,6 +119,7 @@ class PIDControllerApp:
                     self.connection_status.config(text="Connected", bg="green")
                     self.running = True
                     self.recursive_update_textbox()
+                    self.read_initial_data()
                 except serial.SerialException:
                     self.connection_status.config(text="Connection Failed", bg="red")
             else:
@@ -166,33 +167,23 @@ class PIDControllerApp:
             except ValueError:
                 print("Invalid setpoint value")
 
-    def start_serial_thread(self):
-        thread = threading.Thread(target=self.serial_thread)
-        thread.daemon = True
-        thread.start()
-
-    def serial_thread(self):
-        while self.running:
-            try:
-                line = self.serial_port_manager.read_line().decode('utf-8').strip()
-                if line:
-                    data = line.split(",")
-                    if len(data) == 6:
-                        set_point, curr_pos, kp, ki, kd, ready = data
-                        self.setpoint_display_value.config(text=f"{set_point}%")
-                        self.current_position_value.config(text=f"{curr_pos}%")
-                        self.kp_display_value.config(text=kp)
-                        self.ki_display_value.config(text=ki)
-                        self.kd_display_value.config(text=kd)
-                        if ready == "1":
-                            self.led_status.config(text="ON", bg="green")
-                        else:
-                            self.led_status.config(text="ON", bg="yellow")
-                        self.update_arc(set_point, curr_pos)
-            except serial.SerialException:
-                print("Serial read error")
-                self.disconnect_serial()
-            time.sleep(0.01)
+    def read_initial_data(self):
+        line = self.serial_port_manager.read_line().decode('utf-8').strip()
+        if line:
+            print(f"Initial data: {line}")  # Debug print
+            data = line.split(",")
+            if len(data) == 6:
+                set_point, curr_pos, kp, ki, kd, ready = data
+                self.setpoint_display_value.config(text=f"{set_point}%")
+                self.current_position_value.config(text=f"{curr_pos}%")
+                self.kp_display_value.config(text=kp)
+                self.ki_display_value.config(text=ki)
+                self.kd_display_value.config(text=kd)
+                if ready == "1":
+                    self.led_status.config(text="ON", bg="green")
+                else:
+                    self.led_status.config(text="OFF", bg="yellow")
+                self.update_arc(set_point, curr_pos)
 
     def update_arc(self, set_point, curr_pos):
         # 更新红色圆弧
@@ -205,10 +196,11 @@ class PIDControllerApp:
 
     def recursive_update_textbox(self):
         serial_port_buffer = self.serial_port_manager.read_buffer()
-        self.text_box.config(state='normal')
-        self.text_box.insert(tk.END, serial_port_buffer.decode("ascii"))
-        self.text_box.see(tk.END)
-        self.text_box.config(state='disabled')
+        if serial_port_buffer:  # Ensure there's something to decode and insert
+            self.text_box.config(state='normal')
+            self.text_box.insert(tk.END, serial_port_buffer.decode("ascii"))
+            self.text_box.see(tk.END)
+            self.text_box.config(state='disabled')
         if self.serial_port_manager.is_running:
             self.root.after(100, self.recursive_update_textbox)
 
@@ -220,12 +212,14 @@ class PIDControllerApp:
 
 
 class SerialPortManager:
-    def __init__(self, serial_port_baud=9600):
+    def __init__(self, app):
         self.is_running = False
         self.serial_port_name = None
-        self.serial_port_baud = serial_port_baud
+        self.serial_port_baud = 9600
         self.serial_port = serial.Serial()
         self.serial_port_buffer = bytearray()
+        self.line_buffer = ""
+        self.app = app
 
     def set_name(self, serial_port_name):
         self.serial_port_name = serial_port_name
@@ -255,10 +249,33 @@ class SerialPortManager:
                 while self.serial_port.in_waiting > 0:
                     serial_port_byte = self.serial_port.read(1)
                     self.serial_port_buffer.append(int.from_bytes(serial_port_byte, byteorder='big'))
-                    self.main_process(serial_port_byte)
+                    self.line_buffer += serial_port_byte.decode('utf-8')
+
+                    if '\n' in self.line_buffer:
+                        lines = self.line_buffer.split('\n')
+                        for line in lines[:-1]:
+                            self.update_app(line.strip())
+                        self.line_buffer = lines[-1]
 
         if self.serial_port.isOpen():
             self.serial_port.close()
+
+    def update_app(self, data_line):
+        if data_line:
+            print(f"Update app with data: {data_line}")  # Debug print
+            data = data_line.split(",")
+            if len(data) == 6:
+                set_point, curr_pos, kp, ki, kd, ready = data
+                self.app.setpoint_display_value.config(text=f"{set_point}%")
+                self.app.current_position_value.config(text=f"{curr_pos}%")
+                self.app.kp_display_value.config(text=kp)
+                self.app.ki_display_value.config(text=ki)
+                self.app.kd_display_value.config(text=kd)
+                if ready == "1":
+                    self.app.led_status.config(text="ON", bg="green")
+                else:
+                    self.app.led_status.config(text="OFF", bg="yellow")
+                self.app.update_arc(set_point, curr_pos)
 
     def read_buffer(self):
         buffer = self.serial_port_buffer
