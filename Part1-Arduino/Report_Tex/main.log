@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.7.18)  18 JUL 2024 19:30
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.7.18)  18 JUL 2024 19:49
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -232,397 +232,189 @@ Package: fancyhdr 2024/04/23 v4.2 Extensive control of page headers and footers
 \f@nch@O@erf=\skip60
 \f@nch@O@olf=\skip61
 \f@nch@O@orf=\skip62
-) (C:\Program Files\MiKTeX\tex/latex\l3backend\l3backend-pdftex.def
+) (C:\Users\WANGZ\AppData\Roaming\MiKTeX\tex/latex/geometry\geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+ (C:\Program Files\MiKTeX\tex/generic\iftex\ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+)
+\Gm@cnth=\count286
+\Gm@cntv=\count287
+\c@Gm@tempcnt=\count288
+\Gm@bindingoffset=\dimen156
+\Gm@wd@mp=\dimen157
+\Gm@odd@mp=\dimen158
+\Gm@even@mp=\dimen159
+\Gm@layoutwidth=\dimen160
+\Gm@layoutheight=\dimen161
+\Gm@layouthoffset=\dimen162
+\Gm@layoutvoffset=\dimen163
+\Gm@dimlist=\toks25
+ (C:\Users\WANGZ\AppData\Roaming\MiKTeX\tex/latex/geometry\geometry.cfg))
+
+c:/Users/WANGZ/Documents/GitHub/EmbedDevelop-Summer2024/Part1-Arduino/Report_Tex/main.tex:10: LaTeX Error: Option clash for package geometry.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.10 
+     
+The package geometry has already been loaded with options:
+  [a4paper,margin=1in]
+There has now been an attempt to load it with options
+  [a4paper, top=1in, bottom=1in, left=0.75in, right=0.75in]
+Adding the global options:
+  a4paper,margin=1in,a4paper, top=1in, bottom=1in, left=0.75in, right=0.75in
+to your \documentclass declaration may fix this.
+Try typing  <return>  to proceed.
+
+(C:\Program Files\MiKTeX\tex/latex\l3backend\l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count286
+\l__color_backend_stack_int=\count289
 \l__pdf_internal_box=\box55
 ) (main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
  (C:\Program Files\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count287
-\scratchdimen=\dimen156
+\scratchcounter=\count290
+\scratchdimen=\dimen164
 \scratchbox=\box56
-\nofMPsegments=\count288
-\nofMParguments=\count289
-\everyMPshowfont=\toks25
-\MPscratchCnt=\count290
-\MPscratchDim=\dimen157
-\MPnumerator=\count291
-\makeMPintoPDFobject=\count292
-\everyMPtoPDFconversion=\toks26
+\nofMPsegments=\count291
+\nofMParguments=\count292
+\everyMPshowfont=\toks26
+\MPscratchCnt=\count293
+\MPscratchDim=\dimen165
+\MPnumerator=\count294
+\makeMPintoPDFobject=\count295
+\everyMPtoPDFconversion=\toks27
 ) (C:\Program Files\MiKTeX\tex/latex\epstopdf-pkg\epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
  (C:\Program Files\MiKTeX\tex/latex\00miktex\epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
-Package hyperref Info: Link coloring OFF on input line 18.
- (main.out) (main.out)
+Package hyperref Info: Link coloring OFF on input line 22.
 \@outlinefile=\write3
 \openout3 = `main.out'.
 
 
-Overfull \hbox (6.4451pt too wide) in paragraph at lines 23--24
-\OT1/cmr/m/n/10 The pur-pose of this ex-per-i-men-t is to im-ple-men-t a Proportional-Integral-Derivative
- []
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(72.26999pt, 452.9679pt, 72.26999pt)
+* v-part:(T,H,B)=(72.26999pt, 700.50687pt, 72.26999pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=452.9679pt
+* \textheight=700.50687pt
+* \oddsidemargin=0.0pt
+* \evensidemargin=0.0pt
+* \topmargin=-37.0pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=10.0pt
+* \footskip=30.0pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 [1
 
-{C:/Users/WANGZ/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] [2]
-Overfull \hbox (32.9967pt too wide) in paragraph at lines 312--312
-[]\OT1/cmtt/m/n/10 ==== The program will not run until the serial port is initialized! ====[] 
- []
-
-
-Overfull \hbox (237.74492pt too wide) in paragraph at lines 312--312
-[]\OT1/cmtt/m/n/10 Set PLOTTER to 1 for visualization with the plotter, set to 0 for manual observation through the serial monitor[] 
- []
-
-
-Overfull \hbox (137.99579pt too wide) in paragraph at lines 312--312
-[]\OT1/cmtt/m/n/10 3. After entering the commands, view the current parameter values through the serial monitor[] 
- []
-
-
-Overfull \hbox (368.99377pt too wide) in paragraph at lines 312--312
-[]\OT1/cmtt/m/n/10 #define REVERSE 1 // !!!! If the motor spins to the limit immediately upon activation, reverse the motor polarity by modifying this line[] 
- []
-
-
-Overfull \hbox (17.24684pt too wide) in paragraph at lines 312--312
-[]\OT1/cmtt/m/n/10 float e_last = 0;        // Previous error for derivative calculation[] 
- []
-
-
-Overfull \hbox (38.24666pt too wide) in paragraph at lines 312--312
-[]\OT1/cmtt/m/n/10 const int MIN_PWM = 68;           // Minimum PWM value for motor rotation[] 
- []
-
-[3] [4]
-Overfull \hbox (11.99689pt too wide) in paragraph at lines 312--312
-[]    \OT1/cmtt/m/n/10 digitalWrite(LED, 1); // Light up the LED if setpoint is reached[] 
- []
-
-[5]
-Overfull \hbox (22.4968pt too wide) in paragraph at lines 312--312
-[]  \OT1/cmtt/m/n/10 float pos_error = set_point - curr_pos;           // Calculate error[] 
- []
-
-
-Overfull \hbox (64.49643pt too wide) in paragraph at lines 312--312
-[]  \OT1/cmtt/m/n/10 float control_error = set_point - prev_set_point; // Calculate control error[] 
- []
-
-
-Overfull \hbox (90.7462pt too wide) in paragraph at lines 312--312
-[]  \OT1/cmtt/m/n/10 float control_signal = pid(pos_error);            // Calculate PID control signal[] 
- []
-
-
-Overfull \hbox (53.99652pt too wide) in paragraph at lines 312--312
-[]  \OT1/cmtt/m/n/10 // Ensure control signal absolute value is not below the minimum PWM value[] 
- []
-
-
-Overfull \hbox (95.99615pt too wide) in paragraph at lines 312--312
-[]  \OT1/cmtt/m/n/10 if (abs(pos_error) < POSITION_THRESHOLD && abs(control_error) < CONTROL_THRESHOLD)[] 
- []
-
-[6]
-Overfull \hbox (101.24611pt too wide) in paragraph at lines 312--312
-[]    \OT1/cmtt/m/n/10 delay(delay_time); // Short delay to avoid overly frequent control signal updates[] 
- []
-
-[7]
-Overfull \hbox (1.49698pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.port_label = tk.Label(self.root, text="Select Port:")[] 
- []
-
-
-Overfull \hbox (153.74565pt too wide) in paragraph at lines 629--629
+{C:/Users/WANGZ/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] [2] [3] [4] [5] [6]
+Overfull \hbox (45.77776pt too wide) in paragraph at lines 638--638
 []        \OT1/cmtt/m/n/10 self.connect_button = tk.Button(self.root, text="Connect", command=self.connect_serial)[] 
  []
 
 
-Overfull \hbox (101.24611pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.connection_status = tk.Label(self.root, text="Not Connected", bg="grey")[] 
- []
-
-[8]
-Overfull \hbox (164.24556pt too wide) in paragraph at lines 629--629
+Overfull \hbox (56.27766pt too wide) in paragraph at lines 638--638
 []        \OT1/cmtt/m/n/10 self.kp_scale = tk.Scale(self.root, from_=0, to=10, resolution=0.1, orient=tk.HORIZONTAL)[] 
  []
 
 
-Overfull \hbox (95.99615pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.kp_button = tk.Button(self.root, text="Set Kp", command=self.update_kp)[] 
- []
-
-
-Overfull \hbox (164.24556pt too wide) in paragraph at lines 629--629
+Overfull \hbox (56.27766pt too wide) in paragraph at lines 638--638
 []        \OT1/cmtt/m/n/10 self.ki_scale = tk.Scale(self.root, from_=0, to=10, resolution=0.1, orient=tk.HORIZONTAL)[] 
  []
 
 
-Overfull \hbox (95.99615pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.ki_button = tk.Button(self.root, text="Set Ki", command=self.update_ki)[] 
- []
-
-
-Overfull \hbox (164.24556pt too wide) in paragraph at lines 629--629
+Overfull \hbox (56.27766pt too wide) in paragraph at lines 638--638
 []        \OT1/cmtt/m/n/10 self.kd_scale = tk.Scale(self.root, from_=0, to=10, resolution=0.1, orient=tk.HORIZONTAL)[] 
  []
 
-
-Overfull \hbox (95.99615pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.kd_button = tk.Button(self.root, text="Set Kd", command=self.update_kd)[] 
- []
-
-
-Overfull \hbox (6.74693pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.setpoint_label = tk.Label(self.root, text="Set Point")[] 
- []
-
-
-Overfull \hbox (195.74529pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.setpoint_button = tk.Button(self.root, text="Set Set Point", command=self.update_setpoint)[] 
- []
-
-
-Overfull \hbox (90.7462pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.current_position_label = tk.Label(self.root, text="Current Position:")[] 
- []
-
-
-Overfull \hbox (11.99689pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.current_position_value = tk.Label(self.root, text="0%")[] 
- []
-
-
-Overfull \hbox (95.99615pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.setpoint_display_label = tk.Label(self.root, text="Set Point Display:")[] 
- []
-
-
-Overfull \hbox (11.99689pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.setpoint_display_value = tk.Label(self.root, text="0%")[] 
- []
-
-
-Overfull \hbox (27.74675pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.kp_display_label = tk.Label(self.root, text="Kp Display:")[] 
- []
-
-[9]
-Overfull \hbox (27.74675pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.ki_display_label = tk.Label(self.root, text="Ki Display:")[] 
- []
-
-
-Overfull \hbox (27.74675pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.kd_display_label = tk.Label(self.root, text="Kd Display:")[] 
- []
-
-
-Overfull \hbox (27.74675pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.led_status = tk.Label(self.root, text="TUNING", bg="grey")[] 
- []
-
-
-Overfull \hbox (59.24648pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.canvas = tk.Canvas(self.root, width=200, height=200, bg="white")[] 
- []
-
-
-Overfull \hbox (200.99524pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.arc = self.canvas.create_arc(50, 50, 150, 150, start=90, extent=0, outline="blue", width=2)[] 
- []
-
-
-Overfull \hbox (248.24483pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.set_point_arc = self.canvas.create_arc(50, 50, 150, 150, start=90, extent=0, outline="red", width=2)[] 
- []
-
-
-Overfull \hbox (174.74547pt too wide) in paragraph at lines 629--629
+[7]
+Overfull \hbox (66.77757pt too wide) in paragraph at lines 638--638
 []        \OT1/cmtt/m/n/10 self.text_box = scrolledtext.ScrolledText(self.root, width=50, height=10, state='disabled')[] 
  []
 
 
-Overfull \hbox (53.99652pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.text_box.grid(row=11, column=0, columnspan=5, padx=10, pady=10)[] 
- []
-
-
-Overfull \hbox (122.24593pt too wide) in paragraph at lines 629--629
+Overfull \hbox (14.27803pt too wide) in paragraph at lines 638--638
 []        \OT1/cmtt/m/n/10 self.root.after(1000, self.refresh_ports)  # Refresh the port list every 1 second[] 
  []
 
-
-Overfull \hbox (11.99689pt too wide) in paragraph at lines 629--629
-[]                    \OT1/cmtt/m/n/10 self.serial_port_manager.set_name(selected_port)[] 
+[8] [9] [10]
+Overfull \hbox (14.27803pt too wide) in paragraph at lines 638--638
+[]                        \OT1/cmtt/m/n/10 self.serial_port_buffer.append(int.from_bytes(serial_port_byte, \[] 
  []
 
-
-Overfull \hbox (69.74638pt too wide) in paragraph at lines 629--629
-[]                    \OT1/cmtt/m/n/10 self.connection_status.config(text="Connected", bg="green")[] 
- []
-
-[10]
-Overfull \hbox (101.24611pt too wide) in paragraph at lines 629--629
-[]                    \OT1/cmtt/m/n/10 self.connection_status.config(text="Connection Failed", bg="red")[] 
- []
-
-
-Overfull \hbox (74.99634pt too wide) in paragraph at lines 629--629
-[]                \OT1/cmtt/m/n/10 self.connection_status.config(text="No Port Selected", bg="red")[] 
- []
-
-
-Overfull \hbox (22.4968pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.connection_status.config(text="Not Connected", bg="grey")[] 
- []
-
-
-Overfull \hbox (11.99689pt too wide) in paragraph at lines 629--629
-[]                    \OT1/cmtt/m/n/10 self.serial_port_manager.write(command.encode())[] 
- []
-
-[11]
-Overfull \hbox (48.74657pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 line = self.serial_port_manager.read_line().decode('utf-8').strip()[] 
- []
-
-
-Overfull \hbox (32.9967pt too wide) in paragraph at lines 629--629
-[]                \OT1/cmtt/m/n/10 self.setpoint_display_value.config(text=f"{set_point}%")[] 
- []
-
-
-Overfull \hbox (27.74675pt too wide) in paragraph at lines 629--629
-[]                \OT1/cmtt/m/n/10 self.current_position_value.config(text=f"{curr_pos}%")[] 
- []
-
-
-Overfull \hbox (11.99689pt too wide) in paragraph at lines 629--629
-[]                    \OT1/cmtt/m/n/10 self.led_status.config(text="READY", bg="green")[] 
- []
-
-
-Overfull \hbox (22.4968pt too wide) in paragraph at lines 629--629
-[]                    \OT1/cmtt/m/n/10 self.led_status.config(text="TUNING", bg="yellow")[] 
- []
-
-
-Overfull \hbox (48.74657pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.canvas.itemconfig(self.set_point_arc, extent=set_point_extent)[] 
- []
-
-
-Overfull \hbox (6.74693pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.canvas.itemconfig(self.arc, extent=current_pos_extent)[] 
- []
-
-
-Overfull \hbox (6.74693pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 serial_port_buffer = self.serial_port_manager.read_buffer()[] 
- []
-
-
-Overfull \hbox (69.74638pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 if serial_port_buffer:  # Ensure there's something to decode and insert[] 
- []
-
-
-Overfull \hbox (53.99652pt too wide) in paragraph at lines 629--629
-[]            \OT1/cmtt/m/n/10 self.text_box.insert(tk.END, serial_port_buffer.decode("ascii"))[] 
- []
-
-[12]
-Overfull \hbox (64.49643pt too wide) in paragraph at lines 629--629
-[]        \OT1/cmtt/m/n/10 self.serial_port_thread = threading.Thread(target=self.thread_handler)[] 
- []
-
-
-Overfull \hbox (6.74693pt too wide) in paragraph at lines 629--629
-[]                        \OT1/cmtt/m/n/10 serial_port_byte = self.serial_port.read(1)[] 
- []
-
-
-Overfull \hbox (206.2452pt too wide) in paragraph at lines 629--629
-[]                        \OT1/cmtt/m/n/10 self.serial_port_buffer.append(int.from_bytes(serial_port_byte, byteorder='big'))[] 
- []
-
-
-Overfull \hbox (53.99652pt too wide) in paragraph at lines 629--629
-[]                        \OT1/cmtt/m/n/10 self.line_buffer += serial_port_byte.decode('utf-8')[] 
- []
-
-[13]
-Overfull \hbox (22.4968pt too wide) in paragraph at lines 629--629
-[]            \OT1/cmtt/m/n/10 print(f"Update app with data: {data_line}")  # Debug print[] 
- []
-
-
-Overfull \hbox (53.99652pt too wide) in paragraph at lines 629--629
-[]                \OT1/cmtt/m/n/10 self.app.setpoint_display_value.config(text=f"{set_point}%")[] 
- []
-
-
-Overfull \hbox (48.74657pt too wide) in paragraph at lines 629--629
-[]                \OT1/cmtt/m/n/10 self.app.current_position_value.config(text=f"{curr_pos}%")[] 
- []
-
-
-Overfull \hbox (32.9967pt too wide) in paragraph at lines 629--629
-[]                    \OT1/cmtt/m/n/10 self.app.led_status.config(text="READY", bg="green")[] 
- []
-
-
-Overfull \hbox (43.49661pt too wide) in paragraph at lines 629--629
-[]                    \OT1/cmtt/m/n/10 self.app.led_status.config(text="TUNING", bg="yellow")[] 
- []
-
-[14] [15] [16] (main.aux)
+[11] [12] [13] (main.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
  ***********
-Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 67151EAE01DA0AEDFDAA160286E11D73;1354.
+
+
+Package rerunfilecheck Warning: File `main.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `main.out':
+(rerunfilecheck)             Before: <no file>
+(rerunfilecheck)             After:  5DD93E3AF947C4CC5480F6806BA3023C;2591.
  ) 
 Here is how much of TeX's memory you used:
- 9348 strings out of 476402
- 143327 string characters out of 5795892
- 1941542 words of memory out of 5000000
- 31258 multiletter control sequences out of 15000+600000
- 563955 words of font info for 57 fonts, out of 8000000 for 9000
+ 9828 strings out of 476402
+ 150701 string characters out of 5795892
+ 1947542 words of memory out of 5000000
+ 31727 multiletter control sequences out of 15000+600000
+ 564978 words of font info for 60 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  75i,11n,79p,560b,597s stack positions out of 10000i,1000n,20000p,200000b,200000s
- <C:\Users\WANGZ\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on main.pdf (16 pages, 172883 bytes).
+ <C:\Users\WANGZ\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm0600.pk> <C:\Users\WANGZ\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk> <C:\Users\WANGZ\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm0800.pk><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on main.pdf (13 pages, 195187 bytes).
 PDF statistics:
- 190 PDF objects out of 1000 (max. 8388607)
- 35 named destinations out of 1000 (max. 500000)
- 81 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 175 PDF objects out of 1000 (max. 8388607)
+ 39 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

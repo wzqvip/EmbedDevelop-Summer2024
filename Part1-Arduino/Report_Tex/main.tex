@@ -5,9 +5,13 @@
 \usepackage{float}
 \usepackage{hyperref}
 \usepackage{fancyhdr}
+\usepackage[a4paper, margin=1in]{geometry}
+\usepackage[a4paper, top=1in, bottom=1in, left=0.75in, right=0.75in]{geometry}
+
+
 
 \title{Experiment Report: PID Motor Control with Arduino and Python GUI}
-\author{Ziqi Wang}
+\author{Ziqi Wang\thanks{wangzq@shanghaitech.edu.cn}}
 \date{\today}
 
 \pagestyle{fancy}
@@ -74,7 +78,8 @@ The following Arduino code implements the PID control algorithm.
 /*
 ==== The program will not run until the serial port is initialized! ====
 
-Set PLOTTER to 1 for visualization with the plotter, set to 0 for manual observation through the serial monitor
+Set PLOTTER to 1 for visualization with the plotter, 
+set to 0 for manual observation through the serial monitor
 
 Method to adjust PID parameters via serial monitor:
 1. Open the serial monitor with a default baud rate of 115200
@@ -83,11 +88,11 @@ Method to adjust PID parameters via serial monitor:
    - i=0.5: Set I coefficient to 0.5
    - d=0.1: Set D coefficient to 0.1
    - s=100: Set the setpoint to 100
-3. After entering the commands, view the current parameter values through the serial monitor
+3. After entering the commands, view the current parameter values
 */
 
 #define PLOTTER 1
-#define REVERSE 1 // !!!! If the motor spins to the limit immediately upon activation, reverse the motor polarity by modifying this line
+#define REVERSE 1 
 
 #define LED 12
 #define STBY 7
@@ -371,7 +376,8 @@ class PIDControllerApp:
         self.setpoint_label.grid(row=4, column=0)
         self.setpoint_entry = tk.Entry(self.root)
         self.setpoint_entry.grid(row=4, column=1)
-        self.setpoint_button = tk.Button(self.root, text="Set Set Point", command=self.update_setpoint)
+        self.setpoint_button = tk.Button(self.root, text="Set Set Point", \
+            command=self.update_setpoint)
         self.setpoint_button.grid(row=4, column=2)
 
         self.current_position_label = tk.Label(self.root, text="Current Position:")
@@ -406,8 +412,10 @@ class PIDControllerApp:
 
         self.canvas = tk.Canvas(self.root, width=200, height=200, bg="white")
         self.canvas.grid(row=0, column=4, rowspan=11)
-        self.arc = self.canvas.create_arc(50, 50, 150, 150, start=90, extent=0, outline="blue", width=2)
-        self.set_point_arc = self.canvas.create_arc(50, 50, 150, 150, start=90, extent=0, outline="red", width=2)
+        self.arc = self.canvas.create_arc(50, 50, 150, 150,  \
+            start=90, extent=0, outline="blue", width=2)
+        self.set_point_arc = self.canvas.create_arc(50, 50,  \
+            150, 150, start=90, extent=0, outline="red", width=2)
 
         # Add scrolled text box for serial output
         self.text_box = scrolledtext.ScrolledText(self.root, width=50, height=10, state='disabled')
@@ -566,7 +574,8 @@ class SerialPortManager:
                 else:
                     while self.serial_port.in_waiting > 0:
                         serial_port_byte = self.serial_port.read(1)
-                        self.serial_port_buffer.append(int.from_bytes(serial_port_byte, byteorder='big'))
+                        self.serial_port_buffer.append(int.from_bytes(serial_port_byte, \ 
+                            byteorder='big'))
                         self.line_buffer += serial_port_byte.decode('utf-8')
 
                         if '\n' in self.line_buffer:
@@ -646,6 +655,64 @@ The Python GUI was implemented using Tkinter and provides the following function
     \item \textbf{Visualization:} Uses arcs to visualize the setpoint and current position on a canvas.
     \item \textbf{Scrollable Text Box:} Provides a scrollable text box to display the serial output from the Arduino.
 \end{itemize}
+
+\section{Packaging Python Program as Executable}
+
+In this section, we will discuss how to package the Python GUI program into a standalone executable (.exe) file using \textit{PyInstaller}. This process allows the program to be distributed and run on computers without requiring a separate Python installation.
+
+\subsection{Installing PyInstaller}
+
+First, you need to install \textit{PyInstaller}. This can be done using the following command:
+
+\begin{verbatim}
+pip install pyinstaller
+\end{verbatim}
+
+\subsection{Creating the Executable}
+
+Assuming your Python file is named \texttt{PIDControllerApp.py}, you can create an executable using the following command:
+
+\begin{verbatim}
+pyinstaller --onefile --windowed PIDControllerApp.py
+\end{verbatim}
+
+Explanation of the parameters:
+\begin{itemize}
+    \item \texttt{--onefile}: Tells \textit{PyInstaller} to bundle everything into a single executable file.
+    \item \texttt{--windowed}: Creates a GUI application without a console window (only for Windows).
+\end{itemize}
+
+\subsection{Including Additional Data Files and Icons}
+
+If your program requires additional data files or a custom icon, you can include them during the packaging process.
+
+\begin{verbatim}
+pyinstaller --onefile --windowed --icon=icon.ico PIDControllerApp.py
+\end{verbatim}
+
+\subsection{Complete Example}
+
+Here is a complete example assuming your program file is named \texttt{PIDControllerApp.py} and you wish to use a custom icon \texttt{icon.ico}:
+
+\begin{verbatim}
+pip install pyinstaller
+pyinstaller --onefile --windowed --icon=icon.ico PIDControllerApp.py
+\end{verbatim}
+
+\subsection{Output}
+
+The generated executable will be located in the \texttt{dist} folder within your project directory. You can run the \texttt{PIDControllerApp.exe} file directly to launch your application.
+
+\subsection{Troubleshooting}
+
+If you encounter any issues during the packaging process, refer to the \textit{PyInstaller} documentation for more detailed guidance: \href{https://pyinstaller.readthedocs.io/en/stable/}{PyInstaller Documentation}.
+
+Common troubleshooting steps include:
+\begin{itemize}
+    \item Ensuring all necessary Python libraries are installed.
+    \item Checking the log files generated in the \texttt{build} folder for any error messages.
+\end{itemize}
+
 
 \section{Conclusion}
 This experiment successfully demonstrates the implementation of a PID controller for motor control using an Arduino and a Python-based GUI. The system allows real-time adjustment and monitoring of PID parameters, providing a valuable tool for understanding and tuning PID controllers.
