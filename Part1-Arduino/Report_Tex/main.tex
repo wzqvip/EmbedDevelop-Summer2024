@@ -1,44 +1,93 @@
 \documentclass{article}
-\usepackage{xeCJK}
-\setCJKmainfont{Noto Serif CJK SC}
 
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
 
-\title{实验报告: 电机控制与PID调试}
-\author{姓名}
+\title{Experiment Report: PID Motor Control with Arduino and Python GUI}
+\author{Ziqi Wang}
 \date{\today}
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\fancyfoot[R]{\thepage}
 
 \begin{document}
 
 \maketitle
 
-\begin{abstract}
-本实验旨在通过Arduino平台对电机进行控制，结合PID算法实现精确的速度和位置调节。我们使用Python编写了一个GUI，通过串口与Arduino通信，实现参数的实时调整和数据可视化。本报告详细描述了硬件设置、软件实现及实验结果。
-\end{abstract}
+\section{Introduction}
+The purpose of this experiment is to implement a Proportional-Integral-Derivative (PID) controller for motor control using an Arduino board and a Python-based Graphical User Interface (GUI). The PID controller is a widely used feedback control algorithm that adjusts the system's output to reach a desired setpoint by tuning three parameters: proportional, integral, and derivative.
 
-\section{硬件设置}
+\section{Equipment}
 \begin{itemize}
-    \item \textbf{Arduino开发板}：用于电机控制和数据采集。
-    \item \textbf{电机驱动模块}：H桥电机驱动，用于控制电机的转动方向和速度。
-    \item \textbf{电位器}：用于模拟设定值输入。
-    \item \textbf{传感器}：用于读取电机当前位置。
-    \item \textbf{LED}：指示系统状态。
+    \item Arduino development board
+    \item DC motor
+    \item Precision potentiometer
+    \item Computer with Arduino IDE and Python environment
 \end{itemize}
 
-\section{软件实现}
-\subsection{Arduino代码}
-Arduino代码主要包括以下几个部分：
+\section{Principle of PID Control}
+PID control involves three separate parameters: Proportional (P), Integral (I), and Derivative (D). Each parameter influences the controller in a different way:
+
 \begin{itemize}
-    \item \textbf{引脚定义}：电机控制引脚，传感器和设定值输入引脚，串口通信初始化。
-    \item \textbf{PID算法}：计算误差、积分误差和微分误差，输出控制信号。
-    \item \textbf{串口通信}：接收和解析来自Python GUI的控制命令，发送当前状态数据到GUI。
+    \item \textbf{Proportional (P):} This term produces an output value that is proportional to the current error value. The proportional response can be adjusted by multiplying the error by a constant known as the proportional gain ($K_p$). If the proportional gain is too high, the system can become unstable. The proportional term helps to reduce the rise time.
+    \item \textbf{Integral (I):} This term is concerned with the accumulation of past errors. If the error has been present for a long time, the integral term increases the output to eliminate the residual steady-state error. The contribution from the integral term is adjusted by the integral gain ($K_i$). A high integral gain can lead to overshoot and increased settling time. The integral term helps to eliminate the steady-state error.
+    \item \textbf{Derivative (D):} This term predicts system behavior by considering the rate of change of the error. The derivative response can be adjusted by the derivative gain ($K_d$). A high derivative gain can reduce overshoot, but too high a value can make the system sensitive to noise. The derivative term helps to reduce the overshoot and improve the system stability.
 \end{itemize}
+
+The overall control signal is given by the sum of these three terms:
+\[ u(t) = K_p e(t) + K_i \int_0^t e(\tau) d\tau + K_d \frac{de(t)}{dt} \]
+where \( e(t) \) is the error between the setpoint and the process variable.
+
+\subsection{Adjusting PID Parameters}
+To achieve optimal control performance, you can adjust the PID parameters:
+\begin{itemize}
+    \item \textbf{Increasing $K_p$:} Reduces rise time but may cause overshoot and oscillation.
+    \item \textbf{Increasing $K_i$:} Eliminates steady-state error but may increase overshoot and settling time.
+    \item \textbf{Increasing $K_d$:} Reduces overshoot and improves stability but may make the system sensitive to noise.
+\end{itemize}
+
+When tuning the PID controller:
+\begin{enumerate}
+    \item Start with $K_p$ and increase it until the system responds adequately but without significant overshoot.
+    \item Add $K_i$ to eliminate steady-state error. Increase it gradually while monitoring the system's response.
+    \item Finally, adjust $K_d$ to reduce overshoot and dampen the oscillations.
+\end{enumerate}
+
+\section{Experiment Steps}
+\begin{enumerate}
+    \item Connect the Arduino and motor according to the circuit diagram.
+    \item Write the Arduino code to implement the PID control algorithm.
+    \item Develop the Python code to create a GUI for real-time PID parameter adjustment and motor state monitoring.
+    \item Use the GUI to tune the PID parameters and observe the motor's response.
+    \item Adjust the parameters as needed to achieve optimal control.
+\end{enumerate}
+
+\section{Arduino Code}
+The following Arduino code implements the PID control algorithm.
 
 \begin{verbatim}
+/*
+==== The program will not run until the serial port is initialized! ====
+
+Set PLOTTER to 1 for visualization with the plotter, set to 0 for manual observation through the serial monitor
+
+Method to adjust PID parameters via serial monitor:
+1. Open the serial monitor with a default baud rate of 115200
+2. Enter the following commands to adjust parameters:
+   - p=1.5: Set P coefficient to 1.5
+   - i=0.5: Set I coefficient to 0.5
+   - d=0.1: Set D coefficient to 0.1
+   - s=100: Set the setpoint to 100
+3. After entering the commands, view the current parameter values through the serial monitor
+*/
+
 #define PLOTTER 1
-#define REVERSE 1
+#define REVERSE 1 // !!!! If the motor spins to the limit immediately upon activation, reverse the motor polarity by modifying this line
 
 #define LED 12
 #define STBY 7
@@ -57,22 +106,23 @@ Arduino代码主要包括以下几个部分：
 
 #define delay_time 20
 
-float kp = 3;            
-float ki = 0.5;          
-float kd = 0.1;          
-float e_sum = 0;         
-float e_last = 0;        
-unsigned long last_time;
+float kp = 3;            // P coefficient
+float ki = 0.5;          // I coefficient
+float kd = 0.1;          // D coefficient
+float e_sum = 0;         // Error sum for integral calculation
+float e_last = 0;        // Previous error for derivative calculation
+unsigned long last_time; // Last update time
 
-const int MIN_PWM = 68;          
-const int POSITION_THRESHOLD = 5;
-const int CONTROL_THRESHOLD = 5; 
+const int MIN_PWM = 68;           // Minimum PWM value for motor rotation
+const int POSITION_THRESHOLD = 5; // Position change threshold
+const int CONTROL_THRESHOLD = 5;  // Control signal threshold
 
 int set_point = 0;
 int prev_set_point = 0;
 int prev_pos = 0;
-bool serial_control = false;
+bool serial_control = false;      // Serial control flag
 
+// PID control function
 float pid(float pos_error)
 {
   unsigned long now = millis();
@@ -88,7 +138,8 @@ float pid(float pos_error)
 void setup()
 {
   Serial.begin(115200);
-  while (!Serial);
+  while (!Serial)
+    ;
   pinMode(LED, OUTPUT);
   pinMode(STBY, OUTPUT);
   pinMode(N, OUTPUT);
@@ -97,7 +148,7 @@ void setup()
   pinMode(SetPoint, INPUT);
   pinMode(Sensor, INPUT);
 
-  last_time = millis(); 
+  last_time = millis(); // Initialize time
 }
 
 void loop()
@@ -108,19 +159,21 @@ void loop()
     parseInput(input);
   }
 
-  int curr_pos = analogRead(Sensor);
+  int curr_pos = analogRead(Sensor); // Read current sensor value
 
   if (!serial_control)
   {
+    // If analog control, update the setpoint
     set_point = analogRead(SetPoint);
   }
 
   int ready = 0;
 
+  // Check if the setpoint is reached
   if (abs(set_point - curr_pos) < 20)
   {
     ready = 1;
-    digitalWrite(LED, 1); 
+    digitalWrite(LED, 1); // Light up the LED if setpoint is reached
   }
   else
   {
@@ -147,25 +200,31 @@ void loop()
   {
     Serial.print("Set Point: ");
     Serial.print(set_point / 10.24);
+
     Serial.print(" Current Position: ");
     Serial.print(curr_pos / 10.24);
+
     Serial.print(" P: ");
     Serial.print(kp);
     Serial.print(" I: ");
     Serial.print(ki);
     Serial.print(" D: ");
     Serial.print(kd);
+
     Serial.print(" Ready: ");
     Serial.print(ready);
+
     Serial.print("\n");
   }
 
-  float pos_error = set_point - curr_pos;
-  float control_error = set_point - prev_set_point;
-  float control_signal = pid(pos_error);
+  float pos_error = set_point - curr_pos;           // Calculate error
+  float control_error = set_point - prev_set_point; // Calculate control error
+  float control_signal = pid(pos_error);            // Calculate PID control signal
 
+  // Constrain control signal between -255 and 255
   control_signal = constrain(control_signal, -255, 255);
 
+  // Ensure control signal absolute value is not below the minimum PWM value
   if (control_signal > 40)
   {
     control_signal = max(control_signal, MIN_PWM);
@@ -177,11 +236,11 @@ void loop()
 
   if (abs(pos_error) < POSITION_THRESHOLD && abs(control_error) < CONTROL_THRESHOLD)
   {
-    digitalWrite(STBY, 0);
+    digitalWrite(STBY, 0); // Turn off motor driver
   }
   else
   {
-    digitalWrite(STBY, 1);
+    digitalWrite(STBY, 1); // Enable motor driver
 
     if (control_signal > 0)
     {
@@ -199,13 +258,13 @@ void loop()
     prev_set_point = set_point;
     prev_pos = curr_pos;
 
-    delay(delay_time);
+    delay(delay_time); // Short delay to avoid overly frequent control signal updates
   }
 }
 
 void parseInput(String input)
 {
-  input.trim();
+  input.trim(); // Remove leading and trailing whitespace
 
   if (input.startsWith("p="))
   {
@@ -230,13 +289,13 @@ void parseInput(String input)
     int sp = input.substring(2).toInt();
     if (sp == -1)
     {
-      serial_control = false;
+      serial_control = false; // Switch to analog control
       Serial.println("Switched to analog control");
     }
     else if (sp >= 0 && sp <= 100)
     {
-      set_point = sp * 10.24;
-      serial_control = true;
+      set_point = sp * 10.24; // Map 0-100 value to 0-1023 range
+      serial_control = true; // Set serial control flag
       Serial.print("Updated set point to ");
       Serial.println(set_point);
     }
@@ -252,8 +311,8 @@ void parseInput(String input)
 }
 \end{verbatim}
 
-\subsection{Python GUI代码}
-Python GUI使用Tkinter实现，提供用户友好的界面来调整PID参数和设定值，并实时显示电机的位置和状态。
+\section{Python GUI Code}
+The following Python code creates a GUI using Tkinter for real-time PID parameter adjustment and motor state monitoring.
 
 \begin{verbatim}
 import tkinter as tk
@@ -357,7 +416,7 @@ class PIDControllerApp:
     def refresh_ports(self):
         ports = self.get_serial_ports()
         self.port_combobox['values'] = ports
-        self.root.after(1000, self.refresh_ports)  # 每隔1秒刷新一次端口列表
+        self.root.after(1000, self.refresh_ports)  # Refresh the port list every 1 second
 
     def get_serial_ports(self):
         ports = serial.tools.list_ports.comports()
@@ -444,15 +503,17 @@ class PIDControllerApp:
                 self.update_arc(set_point, curr_pos)
 
     def update_arc(self, set_point, curr_pos):
+        # Update red arc
         set_point_extent = (float(set_point) / 100) * 360
         self.canvas.itemconfig(self.set_point_arc, extent=set_point_extent)
 
+        # Update blue arc
         current_pos_extent = (float(curr_pos) / 100) * 360
         self.canvas.itemconfig(self.arc, extent=current_pos_extent)
 
     def recursive_update_textbox(self):
         serial_port_buffer = self.serial_port_manager.read_buffer()
-        if serial_port_buffer:
+        if serial_port_buffer:  # Ensure there's something to decode and insert
             self.text_box.config(state='normal')
             self.text_box.insert(tk.END, serial_port_buffer.decode("ascii"))
             self.text_box.see(tk.END)
@@ -567,25 +628,26 @@ if __name__ == "__main__":
     root.mainloop()
 \end{verbatim}
 
-\section{实验结果}
-通过Python GUI和Arduino之间的串口通信，我们成功实现了实时调整PID参数并控制电机的位置。实验结果表明，该系统能够有效地调整电机位置，且响应速度和精度均达到了预期。
+\section{Python Libraries}
+The following libraries were used in the Python code:
+\begin{itemize}
+    \item \textbf{serial:} This library is used for serial communication between the Arduino and the Python GUI. For more details, visit \url{https://pypi.org/project/pyserial/}.
+    \item \textbf{threading:} This library is used to handle serial communication in a separate thread to avoid blocking the GUI. For more details, visit \url{https://docs.python.org/3/library/threading.html}.
+    \item \textbf{Scrolledtext:} This library is used to create a scrollable text box for displaying serial output. For more details, visit \url{https://docs.python.org/3/library/tkinter.scrolledtext.html}.
+\end{itemize}
 
-\section{结论}
-本实验通过结合Arduino和Python GUI，实现了电机的精确控制。通过实时调整PID参数，我们能够更好地理解PID控制的原理及其在实际应用中的效果。
+\section{GUI Implementation and Functionality}
+The Python GUI was implemented using Tkinter and provides the following functionalities:
+\begin{itemize}
+    \item \textbf{Serial Port Connection:} Allows the user to select and connect to the appropriate serial port.
+    \item \textbf{Parameter Adjustment:} Provides sliders and buttons to adjust the PID parameters ($K_p$, $K_i$, $K_d$) and the setpoint.
+    \item \textbf{Real-time Monitoring:} Displays the current position, setpoint, and PID parameters in real-time.
+    \item \textbf{LED Status:} Shows the motor's status as either "READY" or "TUNING" based on the motor's position relative to the setpoint.
+    \item \textbf{Visualization:} Uses arcs to visualize the setpoint and current position on a canvas.
+    \item \textbf{Scrollable Text Box:} Provides a scrollable text box to display the serial output from the Arduino.
+\end{itemize}
 
-\section{附录}
-实验过程中使用的图片和电路图如下：
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{path/to/image.png}
-    \caption{实验设置}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{path/to/image.png}
-    \caption{电路图}
-\end{figure}
+\section{Conclusion}
+This experiment successfully demonstrates the implementation of a PID controller for motor control using an Arduino and a Python-based GUI. The system allows real-time adjustment and monitoring of PID parameters, providing a valuable tool for understanding and tuning PID controllers.
 
 \end{document}
