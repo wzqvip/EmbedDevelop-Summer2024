@@ -39,6 +39,7 @@ const int CONTROL_THRESHOLD = 2;  // 控制信号阈值
 int set_point = 0;
 int prev_set_point = 0;
 int prev_pos = 0;
+bool serial_control = false;      // 串口控制标志
 
 // PID控制函数
 float pid(float pos_error)
@@ -79,12 +80,17 @@ void loop()
   }
 
   int curr_pos = analogRead(Sensor); // 读取当前传感器值
-  set_point = analogRead(SetPoint);
+  
+  if (!serial_control)
+  {
+    // 如果是旋钮控制，更新设定值
+    set_point = analogRead(SetPoint);
+  }
 
   if (PLOTTER) {
-    Serial.print(set_point);
+    Serial.print(float(set_point) / 10.23);
     Serial.print(",");
-    Serial.print(curr_pos);
+    Serial.print(float(curr_pos) / 10.23);
     Serial.print(",");
     Serial.print(kp);
     Serial.print(",");
@@ -119,11 +125,6 @@ void loop()
     ki = 5;
     kd = 0;
   }
-  else {
-    kp = 3;
-    ki = 7;
-    kd = 0.2;
-  }
 
   // 将控制信号限制在-255到255之间
   control_signal = constrain(control_signal, -255, 255);
@@ -144,7 +145,8 @@ void loop()
 
   if (abs(pos_error) < POSITION_THRESHOLD && abs(control_error) < CONTROL_THRESHOLD)
   {
-    digitalWrite(STBY, 0); // 关闭电机驱动
+    digitalWrite(STBY, 1); // 关闭电机驱动
+    analogWrite(PWM, 35);
     last_time = millis();
     e_sum = 0;
     e_last = 0;
@@ -207,9 +209,23 @@ void parseInput(String input)
   }
   else if (input.startsWith("s="))
   {
-    set_point = input.substring(2).toInt();
-    Serial.print("Updated set point to ");
-    Serial.println(set_point);
+    int sp = input.substring(2).toInt();
+    if (sp == -1)
+    {
+      serial_control = false; // 切换为旋钮控制
+      Serial.println("Switched to analog control");
+    }
+    else if (sp >= 0 && sp <= 100)
+    {
+      set_point = sp * 10.23; // 将0-100的值映射到0-1023的范围
+      serial_control = true; // 设置串口控制标志
+      Serial.print("Updated set point to ");
+      Serial.println(set_point);
+    }
+    else
+    {
+      Serial.println("Invalid set point value");
+    }
   }
   else
   {
