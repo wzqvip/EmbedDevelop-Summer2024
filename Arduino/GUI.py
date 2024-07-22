@@ -147,7 +147,7 @@ class PIDControllerApp:
             value = self.setpoint_entry.get()
             try:
                 setpoint = float(value)
-                if 0 <= setpoint <= 100:
+                if 0 <= setpoint <= 100 or setpoint == -1:
                     scaled_value = int(setpoint)
                     command = f"s={scaled_value}\n"
                     print(f"Sending command: {command}")
