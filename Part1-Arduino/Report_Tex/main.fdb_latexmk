@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1721303367.9807 "c:/Users/WANGZ/Documents/GitHub/EmbedDevelop-Summer2024/Part1-Arduino/Report_Tex/main.tex" "main.pdf" "main" 1721303372.50126 2
+["pdflatex"] 1721665878.51008 "c:/Users/WANGZ/Documents/GitHub/EmbedDevelop-Summer2024/Part1-Arduino/Report_Tex/main.tex" "main.pdf" "main" 1721665883.72582 2
   "C:/Program Files/MiKTeX/fonts/tfm/jknappen/ec/tcrm0600.tfm" 993062506 1456 d21918d95ca20f07aa266303b9a0a14c ""
   "C:/Program Files/MiKTeX/fonts/tfm/jknappen/ec/tcrm0800.tfm" 993062506 1444 e35ead393df86aae37b5564284d9aa05 ""
   "C:/Program Files/MiKTeX/fonts/tfm/jknappen/ec/tcrm1000.tfm" 993062508 1436 c7f957a372ef2fbe93c0982f96625e12 ""
@@ -88,10 +88,10 @@
   "C:/Users/WANGZ/AppData/Roaming/MiKTeX/tex/latex/letltxmacro/letltxmacro.sty" 1575399536 5766 13a9e8766c47f30327caf893ece86ac8 ""
   "C:/Users/WANGZ/AppData/Roaming/MiKTeX/tex/latex/refcount/refcount.sty" 1576433952 9878 9e94e8fa600d95f9c7731bb21dfb67a4 ""
   "C:/Users/WANGZ/AppData/Roaming/MiKTeX/tex/latex/rerunfilecheck/rerunfilecheck.sty" 1657800696 9714 ba3194bd52c8499b3f1e3eb91d409670 ""
-  "c:/Users/WANGZ/Documents/GitHub/EmbedDevelop-Summer2024/Part1-Arduino/Report_Tex/main.tex" 1721303362 27156 7bbfd2ecf3241ec33c8fb9b4c87873ab ""
-  "main.aux" 1721303372 2229 d64d86fbf1055694009919646a286ad2 "pdflatex"
-  "main.out" 1721303372 2591 5dd93e3af947c4cc5480f6806ba3023c "pdflatex"
-  "main.tex" 1721303362 27156 7bbfd2ecf3241ec33c8fb9b4c87873ab ""
+  "c:/Users/WANGZ/Documents/GitHub/EmbedDevelop-Summer2024/Part1-Arduino/Report_Tex/main.tex" 1721665874 27727 aea9af09b23f3f82454b0309ec5abb1c ""
+  "main.aux" 1721665883 2593 084569674befaf6c29286d37d432dedf "pdflatex"
+  "main.out" 1721665883 3008 1898a7797df1cf451a0435fd39d4170b "pdflatex"
+  "main.tex" 1721665874 27727 aea9af09b23f3f82454b0309ec5abb1c ""
   (generated)
   "main.aux"
   "main.log"

@@ -316,8 +316,30 @@ void parseInput(String input)
 }
 \end{verbatim}
 
-\section{Python GUI Code}
-The following Python code creates a GUI using Tkinter for real-time PID parameter adjustment and motor state monitoring.
+\section{Python GUI}
+This section details the implementation of the Python GUI for the PID controller. The GUI allows for real-time monitoring and adjustment of the PID parameters.
+
+\section{GUI Implementation and Functionality}
+The Python GUI was implemented using Tkinter and provides the following functionalities:
+\begin{itemize}
+    \item \textbf{Serial Port Connection:} Allows the user to select and connect to the appropriate serial port.
+    \item \textbf{Parameter Adjustment:} Provides sliders and buttons to adjust the PID parameters ($K_p$, $K_i$, $K_d$) and the setpoint.
+    \item \textbf{Real-time Monitoring:} Displays the current position, setpoint, and PID parameters in real-time.
+    \item \textbf{LED Status:} Shows the motor's status as either "READY" or "TUNING" based on the motor's position relative to the setpoint.
+    \item \textbf{Visualization:} Uses arcs to visualize the setpoint and current position on a canvas.
+    \item \textbf{Scrollable Text Box:} Provides a scrollable text box to display the serial output from the Arduino.
+\end{itemize}
+
+
+\section{Python Libraries}
+The following libraries were used in the Python code:
+\begin{itemize}
+    \item \textbf{serial:} This library is used for serial communication between the Arduino and the Python GUI. For more details, visit \url{https://pypi.org/project/pyserial/}.
+    \item \textbf{threading:} This library is used to handle serial communication in a separate thread to avoid blocking the GUI. For more details, visit \url{https://docs.python.org/3/library/threading.html}.
+    \item \textbf{Scrolledtext:} This library is used to create a scrollable text box for displaying serial output. For more details, visit \url{https://docs.python.org/3/library/tkinter.scrolledtext.html}.
+\end{itemize}
+
+\subsection{Code}
 
 \begin{verbatim}
 import tkinter as tk
@@ -637,24 +659,6 @@ if __name__ == "__main__":
     root.mainloop()
 \end{verbatim}
 
-\section{Python Libraries}
-The following libraries were used in the Python code:
-\begin{itemize}
-    \item \textbf{serial:} This library is used for serial communication between the Arduino and the Python GUI. For more details, visit \url{https://pypi.org/project/pyserial/}.
-    \item \textbf{threading:} This library is used to handle serial communication in a separate thread to avoid blocking the GUI. For more details, visit \url{https://docs.python.org/3/library/threading.html}.
-    \item \textbf{Scrolledtext:} This library is used to create a scrollable text box for displaying serial output. For more details, visit \url{https://docs.python.org/3/library/tkinter.scrolledtext.html}.
-\end{itemize}
-
-\section{GUI Implementation and Functionality}
-The Python GUI was implemented using Tkinter and provides the following functionalities:
-\begin{itemize}
-    \item \textbf{Serial Port Connection:} Allows the user to select and connect to the appropriate serial port.
-    \item \textbf{Parameter Adjustment:} Provides sliders and buttons to adjust the PID parameters ($K_p$, $K_i$, $K_d$) and the setpoint.
-    \item \textbf{Real-time Monitoring:} Displays the current position, setpoint, and PID parameters in real-time.
-    \item \textbf{LED Status:} Shows the motor's status as either "READY" or "TUNING" based on the motor's position relative to the setpoint.
-    \item \textbf{Visualization:} Uses arcs to visualize the setpoint and current position on a canvas.
-    \item \textbf{Scrollable Text Box:} Provides a scrollable text box to display the serial output from the Arduino.
-\end{itemize}
 
 \section{Packaging Python Program as Executable}
 
@@ -713,6 +717,16 @@ Common troubleshooting steps include:
     \item Checking the log files generated in the \texttt{build} folder for any error messages.
 \end{itemize}
 
+\section{Team Contributions and Grading}
+This section details the contributions of each team member and the corresponding grading percentages.
+
+\subsection{Member Contributions}
+\begin{itemize}
+\item \textbf{Ziqi Wang:} Developed the Python GUI for PID control.
+\item \textbf{Jiaying Du:} Advanced controller code development.
+\item \textbf{Changgui Xu:} Arduino code development, testing and PID tuning.
+\item \textbf{OpenAI:} Enhanced the documentation and provided guidance on PID control concepts.
+\end{itemize}
 
 \section{Conclusion}
 This experiment successfully demonstrates the implementation of a PID controller for motor control using an Arduino and a Python-based GUI. The system allows real-time adjustment and monitoring of PID parameters, providing a valuable tool for understanding and tuning PID controllers.
