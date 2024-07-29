@@ -1,0 +1,25 @@
+# Fdb version 4
+["pdflatex"] 1722222035 "d:/ShanghaiTech/homeword/2024Summer/EmbedDevelop-Summer2024/report/report1.tex" "report1.pdf" "report1" 1722222035 2
+  "d:/ShanghaiTech/homeword/2024Summer/EmbedDevelop-Summer2024/report/report1.tex" 1722222034 3199 f9432bdf7afe6721229f2e0ca2f38ebd ""
+  "d:/texlive/2023/texmf-dist/tex/latex/amsmath/amsbsy.sty" 1701421547 2222 78b930a5a6e3dc2ac69b78c2057b94d7 ""
+  "d:/texlive/2023/texmf-dist/tex/latex/amsmath/amsgen.sty" 1701421547 4173 c989ee3ced31418e3593916ab26c793a ""
+  "d:/texlive/2023/texmf-dist/tex/latex/amsmath/amsmath.sty" 1701421547 88393 1adf6fa3f245270d06e3d4f8910f7fc5 ""
+  "d:/texlive/2023/texmf-dist/tex/latex/amsmath/amsopn.sty" 1701421547 4474 f04cd1cc7bd76eb033e6fb12eb6a0d77 ""
+  "d:/texlive/2023/texmf-dist/tex/latex/amsmath/amstext.sty" 1701421547 2444 70065bddd85997dc1fd0bb7ae634e5fa ""
+  "d:/texlive/2023/texmf-dist/tex/latex/base/article.cls" 1701422315 20144 d5ecf0a5140c8d8d8b72cbe86e320eff ""
+  "d:/texlive/2023/texmf-dist/tex/latex/base/size10.clo" 1701422315 8448 c33a4e1cb35cee9b33c2b21033b73e39 ""
+  "d:/texlive/2023/texmf-dist/tex/latex/fontspec/fontspec.sty" 1701422062 1656 7e824878bad4df5a3e8bba4e463d9126 ""
+  "d:/texlive/2023/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def" 1701422304 30429 213676d4c7327a21d91ddaed900e7b81 ""
+  "d:/texlive/2023/texmf-dist/tex/latex/l3kernel/expl3.sty" 1701422306 6107 5cfea8a675c58918b8c04be10261e48c ""
+  "d:/texlive/2023/texmf-dist/tex/latex/l3packages/xparse/xparse.sty" 1701422308 6812 3c152a1c8d562d7b7291c4839b61a5c3 ""
+  "d:/texlive/2023/texmf-dist/tex/xelatex/xecjk/xeCJK.sty" 1701423362 183137 ed372550124703b2b73cbcc0b47cb20f ""
+  "d:/texlive/2023/texmf-dist/web2c/texmf.cnf" 1701421508 40745 87bb86a62d462f93a1efc6b0c65c872e ""
+  "d:/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1701423512 7883442 6930abcaa36390d7197731e17872feb4 ""
+  "d:/texlive/2023/texmf.cnf" 1701423439 713 e69b156964470283e0530f5060668171 ""
+  "report1.aux" 1722222034 34 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "report1.tex" 1722222034 3199 f9432bdf7afe6721229f2e0ca2f38ebd ""
+  (generated)
+  "report1.aux"
+  "report1.log"
+  "report1.pdf"
+  (rewritten before read)

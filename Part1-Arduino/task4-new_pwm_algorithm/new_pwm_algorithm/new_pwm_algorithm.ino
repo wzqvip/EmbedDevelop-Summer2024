@@ -37,7 +37,7 @@ float e_last = 0;        // 上一个误差值
 unsigned long last_time; // 上一次更新时间
 
 const int MIN_PWM = 40;           // 定义电机转动的最小PWM值
-const int POSITION_THRESHOLD = 2; // 位置变化阈值
+const int POSITION_THRESHOLD = 1; // 位置变化阈值
 const int CONTROL_THRESHOLD = 2;  // 控制信号阈值
 
 int set_point = 0;
